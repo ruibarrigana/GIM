@@ -1,0 +1,1967 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} 
+\usepackage[toc,page]{appendix}
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{rotating}
+\usepackage{caption}
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage{bm} %to allow bold, non-italic greek letters
+\usepackage{bbm}
+\usepackage[english]{babel}
+\usepackage{natbib} 
+\usepackage{amsfonts}
+\usepackage[strict]{changepage}
+\usepackage{hyphenat}
+\usepackage{booktabs} % for much better looking tables
+\usepackage{enumerate}
+\usepackage{kbordermatrix} % for matrices with indexes and brackets instead of parentheses;
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage[group-separator={,}]{siunitx}
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{setspace} %customise spacing in arrays of equations, for example.
+%\onehalfspacing
+\doublespacing
+\usepackage{caption}
+\usepackage{lscape}
+\usepackage{tabu}
+\usepackage[flushleft]{threeparttable}
+\usepackage{xcolor}
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+%\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+\captionsetup[figure]{labelfont={bf,small},textfont={small}}
+\captionsetup[table]{labelfont={bf,small}, textfont={small}}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+%%% END Article customizations
+
+\textheight=25cm
+%\textwidth=16cm
+%\voffset -20mm
+\voffset=-1cm
+
+%%% The "real" document content comes below...
+
+\title{\vspace*{-1.5cm} \Large
+\textbf{
+%A generalised isolation-with-migration model: an efficient maximum-likelihood implementation for multilocus data sets
+% or: A generalised isolation-with-migration model: efficient maximum-likelihood implementation
+Inference of gene flow in the process of speciation:\\ efficient maximum-likelihood implementation of a generalised isolation-with-migration model
+% or: Inference of gene flow in the process of population divergence: ...   
+}}
+\author{Rui J. Costa\thanks{Present address: European Bioinformatics Institute (EMBL-EBI), Hinxton, UK.}~~and Hilde M. Wilkinson-Herbots\thanks{Corresponding author.\\E-mail addresses: ruibarrigana@ebi.ac.uk (R. J. Costa), h.herbots@ucl.ac.uk (H. M. Wilkinson-Herbots).}}
+
+\date{\normalsize{\vspace{-0.5cm} Department of Statistical Science, University College London,\\Gower Street, London WC1E 6BT, UK}}
+
+\renewcommand\Authands{ and }
+
+\begin{document}
+\maketitle
+
+\vspace*{-1cm}
+
+\begin{abstract}
+%Statistical inference about the speciation process has often been based on the isolation-with-migration (IM) model, especially when the research aim is to learn about the presence or absence of gene flow during divergence. 
+%The `generalised IM' (GIM) model introduced in this paper extends both the standard two-population IM model and the isolation-with-initial-migration (IIM) model, and encompasses both these models as special cases, as well as a model of secondary contact. The GIM model can be described as a two-population IM model in which migration rates and population sizes are allowed to change at some point in the past. By developing a maximum-likelihood implementation of this model, we enable inference on both historical and contemporary rates of gene flow between two closely related species. Our method relies on the spectral decomposition of the coalescent generator matrix and is applicable to data sets consisting of the numbers of nucleotide  differences between one pair of DNA sequences at each of a large number of independent loci. As our method uses an explicit expression for the likelihood, it is computationally very fast.
+The `isolation with migration' (IM) model has been extensively used in the literature to detect gene flow during
+the process of speciation. In this model, an ancestral population split into two or more descendant populations which subsequently
+exchanged migrants at a constant rate until the present. Of course, the assumption of constant gene flow until the present is often 
+over-simplistic in the context of speciation. In this paper, we consider a `generalised IM' (GIM) model: a two-population IM model in
+which migration rates and population sizes are allowed to change at some point in the past. By developing a maximum-likelihood
+implementation of this model, we enable inference on both historical and contemporary rates of gene flow between two closely
+related populations or species. The GIM model encompasses both the standard two-population IM model and the `isolation with initial migration' (IIM) model as special cases, as well as a model of secondary contact. 
+%Our method makes it possible to distinguish between such different variants of the model (representing alternative evolutionary scenarios) by means of likelihood ratio tests or AIC scores.
+We examine for simulated data how our method can be used, by means of likelihood ratio tests or AIC scores, to distinguish between the following scenarios of population divergence: (a) divergence in complete isolation; (b) divergence with a period of gene flow followed by isolation; (c) divergence with a period of isolation followed by secondary contact; (d) divergence with ongoing gene flow.
+Our method is based on the coalescent and is suitable for data sets consisting of the number of nucleotide differences
+between one pair of DNA sequences at each of a large number of independent loci. As our method relies on an explicit expression for
+the likelihood, it is computationally very fast.
+% – fitting a GIM model to a data set consisting of thousands of loci typically takes just a few minutes on a personal computer
+\end{abstract}
+
+\vspace*{0.1cm}
+
+%\begin{adjustwidth}{3.5em}{3.5em}
+\noindent
+\textbf{\small Keywords: speciation, coalescent, maximum-likelihood, gene flow, isolation, \\secondary contact.}
+%secondary contact}
+%\end{adjustwidth}
+
+
+\section{Introduction}
+
+%Coalescent-type stochastic models can be used as a statistical inference tool to extract information from a sample of genomic sequences. When the aim is to learn about the role of gene flow during speciation, the most used inferential methods are based on the isolation-with-migration (IM) model, which assumes that an ancestral population instantaneaously split into two or more descendant populations which subsequently exchanged migrants at a constant rate until the present \citep[e.g.][]{Nielsen2001,Hey2004,Hey2005,Hey2007, Becquet2007, Hey2010}. A survey of research that has used the IM model in the context of speciation can be found in \citet{Pinho2010}. 
+
+Molecular genetic data have been used extensively to learn about the evolutionary processes that gave rise to the observed genetic variation. 
+One important example is the use of genetic data to try to infer whether or not gene flow occurred between closely related species during or after speciation. 
+Such studies have often used computer programs such as MDIV \citep{Nielsen2001}, IM \citep{Hey2004, Hey2005}, IMa \citep{Hey2007}, MIMAR \citep{Becquet2007} or IMa2 \citep{Hey2010}, based on the `isolation with migration' (IM)
+model, which assumes that a panmictic ancestral population instantaneously split into two or more descendant populations, which subsequently exchanged migrants at a constant rate until the present.
+%  which assumes that a panmictic ancestral population instantaneously split into two or more descendant populations some time in the past and that migration occurred between these descendant populations at a constant rate ever since.
+A meta-analysis of research papers that have used the IM model in the context of speciation can be found in \citet{Pinho2010}.
+%Whilst such methods have been very useful to study the relationships between different populations within species, they have also been widely applied to make inferences about the presence or absence of gene flow between closely related species (see for exampl
+%\citet{Pinho2010} for a meta-analysis 
+%% an overview
+%of research papers that have used the IM model in the context of speciation), even though the assumption of migration continuing at a constant rate until the present is clearly unrealistic when studying relationships between different species.
+%% is clearly unrealistic in the latter context.
+%In recent years, the IM model has been extended in a number of ways to make it more suited to the study of speciation.
+%%or: more suitable for the study of speciation
+
+While the above methods were aimed at data from a large number of individuals at a relatively small number of loci and are computationally intensive, 
+advances in DNA sequencing technology and the advent of whole-genome sequencing have led to an increased interest in methods 
+%which can handle data at large numbers of loci but from pairs or small numbers of sequences
+%data from pairs or small numbers of sequences but at a large number of loci
+which are able to detect gene flow using data at large numbers of loci but from pairs or small numbers of sequences.
+% or: data from a large number of loci, at the expense of the number of individuals sampled
+%(for example, 
+%Takahata~1995; Takahata et al.~1995; Takahata and Satta~1997; 
+%Yang~1997, 2002; 
+%\citep[for example,][]{Innan2006, Herbots2008, Wang2010, Hobolth2011, Lohse2011, Herbots2012, Zhu2012, Andersen2014}.
+%Burgess and Yang~2008; Yang~2010; Li and Durbin~2011
+We will focus here on maximum-likelihood (ML) methods for such data, which typically assume that there is no recombination within loci and free recombination between loci.
+This type of data set has two advantages. Firstly, data from even a very large number of individuals from the same population at the same 
+locus tend to contain only little information about very old 
+%divergence or speciation 
+events 
+because typically the individuals' ancestral lineages will have coalesced to a very small number of ancestral lineages 
+by the time the event of interest is reached, and in such contexts a data set consisting of a small number of DNA sequences at each of a 
+large number of independent loci is likely to be more informative \citep{Maddison2006, Wang2010, Lohse2010, Lohse2011}. 
+Secondly, considering small numbers of sequences at large numbers of 
+independent loci is mathematically much easier and computationally much
+faster than working with large numbers of sequences at the same locus. 
+In particular, explicit analytical expressions for the likelihood have been 
+obtained for pairs or small numbers of sequences for a number of demographic 
+models \citep[for example,][]{Takahata1995, Herbots2008, Hobolth2011, Lohse2011, Herbots2012, Zhu2012, Andersen2014, Lohse2014, Lohse2016, Costa2017, Dalquen2017}, which can hugely
+% which substantially speeds up
+speed up the computation and maximization of the likelihood. 
+Methods of maximum-likelihood estimation of the parameters of the IM model, suitable for small numbers of sequences at each of a large number of independent loci, were developed by \citet{Herbots2008}, \citet{Wang2010}, \citet{Hobolth2011}, \citet{Lohse2011}, \citet{Zhu2012}, \citet{Andersen2014}, and \citet{Dalquen2017}.
+Because the IM model -- and in particular its assumption of migration continuing at a constant rate until the present -- is clearly unrealistic in the context of speciation, these methods have also been modified or extended to incorporate some forms of 
+temporal changes in migration rates. 
+\citet{Innan2006} implemented a model in which gene flow between two diverging species decreases linearly with time and eventually ceases.
+% or: decreases linearly with time until the species become completely isolated from each other.
+While their model is more sophisticated than some of the later models discussed here, their calculation of the likelihood of the number of nucleotide differences between pairs of sequences relies on the numerical computation of the coalescence time density using recursion equations on a series of time points,
+% (and then numerically integrating over the coalescence time to find the probability of $k$ nucleotide differences), 
+and hence is not as fast as methods that use explicit analytical expressions for the likelihood.
+%or: Their calculation of the likelihood of the number of nucleotide differences between pairs of sequences relies on the numerical computation of the coalescence time density using recursion equations on a series of time points,
+%% (and then numerically integrating over the coalescence time to find the probability of $k$ nucleotide differences), 
+%which can be computationally expensive.
+\citet{Lohse2014} implemented a computationally efficient ML method for a model of introgression between two species where an instantaneous admixture event occurred at a single point in time; 
+%(as opposed to a prolonged period of continuous gene flow); 
+see also \citet{Hearn2014}.  
+\citet{Lohse2011, Lohse2016} also developed a more general Laplace transform method to calculate blockwise likelihoods for a range of demographic scenarios.
+%A fast ML method for a simple `isolation with initial migration' (IIM) model, in which two diverging populations experience gene flow at a constant rate for a period of time and subsequently become completely isolated, was developed by Wilkinson-Herbots (2012, 2015) and Lohse et al (2015) for the symmetric case, and in its full generality by Costa and Wilkinson-Herbots (2017). 
+In our previous work \citep{Herbots2012, Herbots2015, Costa2017} we developed a fast ML method for an `isolation with initial migration' (IIM) model in which two diverging populations experience gene flow at a constant rate for a period of time and subsequently become completely isolated.
+%; see also \citet{Lohse2015}. 
+%\citet{Mailund2012} implemented a more complex (and more computationally intensive) ML method for an IIM model which accounts for recombination, using a hidden Markov model and the so-called `Sequential Markov Coalescent' approach. 
+%A different class of methods uses a summary statistic known as the `site frequency spectrum' of SNP data to fit a range of demographic models, including scenarios with gene flow, by means of a composite likelihood approach \citep[for example,][]{Gutenkunst2009, Naduvilezhath2011, Chen2012, Lukic2012, Excoffier2013, Kern2017}. To overcome some of the limitations of such methods \citep[discussed in][]{Terhorst2015}, 
+%\citet{Beeravolu2018} took this approach a step further by developing a simulation-based composite-likelihood method based on the `blockwise site frequency spectrum' of data consisting of blocks of sequence along the genome.
+
+\begin{figure}[!bth]
+\textbf{\hspace*{-0.5cm} (a) \hspace*{7cm} (b)}\par\smallskip
+\vspace*{-0.5cm}
+\hspace*{1.5cm}
+\makebox[\textwidth][c]{
+\includegraphics[width=.7\textwidth]{Figure_isolation.pdf}\quad
+\hspace*{-3cm}
+\includegraphics[width=.7\textwidth]{Figure_IIM.pdf}
+}
+\par
+%\smallskip
+\vspace*{-1cm}
+\textbf{\hspace*{-0.5cm} (c) \hspace*{7cm} (d)}\par\smallskip
+\vspace*{-0.5cm}
+\hspace*{1.5cm}
+\makebox[\textwidth][c]{
+\includegraphics[width=.7\textwidth]{Figure_introgression.pdf}\quad
+\hspace*{-3cm}
+\includegraphics[width=.7\textwidth]{Figure_GIM.pdf}
+}
+\vspace*{-2cm}
+\caption{The models of population divergence considered in this paper. Figure (d) depicts the generalised isolation-with-migration (GIM) model which is the main focus of this paper. Figures (a) to (c) represent simpler models nested in the GIM model: (a) an isolation model with a potential change of the descendant population sizes; (b) the isolation-with-initial migration (IIM) model; and (c) a model of secondary contact. All four models assume that an ancestral population of size $2aN$ homologous DNA sequences split into two descendant populations of sizes $2N$ and $2bN$ sequences, time $\tau_0$ ago, which may have undergone a subsequent size change at time~$\tau_1$ ago, resulting in populations of sizes $2c_1N$ and $2c_2N$ sequences, respectively. Depending on the model, gene flow may have occurred 
+%at rates $M_1$ and $M_2$ 
+between times $\tau_0$ and $\tau_1$ ago and/or 
+%at rates $M'_1$ and $M'_2$ 
+between time $\tau_1$ ago and the present; $M_i$ and $M'_i$ ($i=1,2$) denote the `scaled' migration rates backward in time during the time periods indicated in the diagrams. 
+%or: The models of population divergence considered in this paper. Figure (d) depicts the generalised isolation-with-migration (GIM) model which is the main focus of this paper, where an ancestral population of size $2aN$ homologous DNA sequences split into two descendant populations of sizes $2N$ and $2bN$ sequences, time $\tau_0$ ago, which subsequently continued to exchange migrants and may have undergone a change of population sizes and/or migration rates at time $\tau_1$ ago; $2c_1N$ and $2c_2N$ represent the current population sizes (numbers of sequences), whilst $M_i$ ($i=1,2$) denote the migration rates between times $\tau_0$ and $\tau_1$ ago, and $M'_i$ ($i=1,2$) the migration rates between time $\tau_1$ ago and the present. Figures (a) to (c) show three simpler models nested in the GIM model, in which some or all of the migration rates are zero: (a) an isolation model with a potential change of the descendant population sizes ($M_1=M_2=M'_1=M'_2=0$); (b) the isolation-with-initial migration (IIM) model ($M'_1=M'_2=0$); (c) a model of secondary contact ($M_1=M_2=0$).
+}
+\label{models}
+\end{figure}
+
+{\color{red} In recent years there has been intense interest 
+%not only 
+in inferring not only whether or not gene flow occurred during the process of speciation, but also in distinguishing divergence in the face of gene flow from secondary contact and, more generally, distinguishing decreasing from increasing gene flow \citep[see, for example, the review by][]{Sousa2013, Roux2016}.
+The present paper contributes to this aim.}  
+%In the present paper, 
+We extend our earlier work on the IM and IIM models to the `generalised isolation with migration' (GIM) model depicted in Figure~\ref{models}d: this is a two-population IM model but which allows for an instantaneous change of the migration rates and population sizes at some point in the past. A useful feature of this model is that it encompasses both the IIM model (Figure~\ref{models}b) and a model of secondary contact (Figure~\ref{models}c) as special cases, as well as a model of isolation with a possible change of the descendant population sizes (Figure~\ref{models}a), so that our ML method provides an easy way to quickly compare how well the four evolutionary scenarios in Figure~\ref{models} fit a particular data set; in addition, the fit of any other models nested in the GIM model, such as versions with unidirectional or symmetric gene flow, and the original IM and isolation models, can also be compared. Thus it is possible to distinguish between historical and contemporary gene flow, while also distinguishing between the effects of gene flow and those of population size changes.
+While the IIM model may be a reasonable 
+%(though, of course, much simplified) 
+(albeit much simplified)
+description of two gradually diverging species, the model of secondary contact in Figure~\ref{models}c 
+%may be of interest to characterize
+represents the case of two populations which underwent a period of isolation (for example, due to climatic changes or habitat fragmentation) and subsequently became reconnected by gene flow, whereas two gradually diverging populations which have not yet reached complete reproductive isolation might be described by a GIM model with decreasing gene flow.
+%The work presented in this paper was motivated by our joint analysis of data in Janko et al. (2018), where the models in Figure~\ref{} (but with symmetric migration rates) were fitted to data from pairs of species of {\em Cobitis} (spined loaches); 
+The models considered in this paper were motivated by our joint work in 
+% by our contribution to
+\citet{Janko2018}, where our method (slightly simplified, with symmetric migration rates) was applied to data from pairs of species of {\em Cobitis} (spined loaches), {\color{red} as part of a broader study examining the interconnection between hybrid asexuality and speciation}; 
+%..., alongside other analyses;
+however, {\color{red} because the focus of that paper was on various types of biological evidence for the evolutionary processes being studied, it} did not include the mathematical results on which our ML method is based, 
+%nor was a simulation study done to examine
+nor did it contain a simulation study examining
+the performance of our method - these {\color{red} mathematical and computational} aspects of our work are presented here.
+% This paper provides the mathematical underpinning of the application of our method to the {\em Cobitis} data in Janko et al. (2018), which motivated this work.
+%or: In Janko et al. (2018), a preliminary version of our method (with symmetric migration rates) was applied to data from pairs of species of {\em Cobitis} (spined loaches), which motivated the work presented below. That paper did not include the mathematical results on which our ML method is based, nor did it contain a simulation study examining the performance of our method; thus the present paper underpins the work described in Sections ... of Janko et al (2018).  
+Our method is applicable to data sets from closely related species or populations, consisting of the numbers of nucleotide differences between one pair of DNA sequences sampled at each of a large number of different loci;
+%(including sufficient numbers of loci for each of the three possible pairwise comparisons: two sequences sampled from descendant population~1, two sequences sampled from descendant population~2, or one sequence sampled from each of the two descendant populations);
+%we will assume that recombination within loci can be ignored and that there is free recombination between loci.
+{\color{red} for mathematical simplicity and} as is common in this context, we will assume that there is no recombination within loci and free recombination between loci. At each locus, the two sampled DNA sequences may be both from descendant population~1, or both from descendant population~2, or one sequence from each of the two descendant populations; a sufficient number of independent loci should be included for each of these three types of pairwise comparisons.
+Our method was implemented in R \citep{R}, and our code 
+%to fit the four models in \ref{} 
+is available at https://github.com/Costa-and-Wilkinson-Herbots/GIM.
+Because our ML method is based on an explicit expression for the likelihood, it is computationally very fast. For example, for simulated data from 40,000 loci, computing ML estimates of the 11 parameters of the GIM model typically took about 1 minute of computing time on an ordinary computer, while fitting all four models shown in Figure~\ref{models} typically took around 3 minutes of computing time in total. 
+
+%Our discussion in the previous paragraphs
+%Our discussion so far 
+% Our overview so far
+%has focused 
+In the previous paragraphs we focused on fast ML methods 
+% fast method of statistical inference
+based on samples of small numbers of DNA sequences from a large number of loci. It should be noted that
+a number of other, more computationally intensive, methods have been implemented
+% ought to be mentioned
+that are able to fit a variety of demographic models, some of which account for recombination as well as gene flow. Notably, 
+\citet{Mailund2012} developed a more complex ML method for an IIM model which accounts for recombination, using a hidden Markov model and the so-called `Sequential Markov Coalescent' approach. 
+{\color{red} \citet{Flouri2020} developed a full-likelihood Bayesian MCMC implementation of the multi-species coalescent which allows for instantaneous introgression or hybridization events, and which can handle DNA sequence data from a relatively large number of individuals from multiple species at a large number of loci.}
+%or: which can handle data from a large number of loci and a relatively large number of sequences from multiple species at each locus.
+A different class of methods uses a summary statistic known as the `site frequency spectrum' of SNP data to fit a range of demographic models, including scenarios with gene flow, by means of a composite-likelihood approach \citep[for example,][]{Gutenkunst2009, Naduvilezhath2011, Chen2012, Lukic2012, Excoffier2013, Kern2017}. To overcome some of the limitations of such methods \citep[discussed in][]{Terhorst2015}, 
+\citet{Beeravolu2018} took this approach a step further by developing a simulation-based composite-likelihood method based on the `blockwise site frequency spectrum' of data consisting of blocks of sequence along the genome, from multiple individuals.
+
+The structure of this paper is as follows. In Section~2 we formulate the GIM model in the context of coalescent theory. We derive an explicit expression for the probability distribution of the number of nucleotide differences between two DNA sequences sampled at random, either both from the same descendant population, or one sequence from each of the two descendant populations; thus we obtain an explicit expression for the likelihood of a data set consisting of the numbers of nucleotide differences between one pair of DNA sequences sampled at each of a large number of independent loci. We also set out the procedures we will use for model comparison, using either AIC scores or a sequence of likelihood ratio tests. Section~3 contains a simulation study, examining the accuracy of the ML estimates of the parameters of the GIM model obtained with our method, and investigating the results of our model selection procedures, 
+%or: and investigating to what extent our model selection procedure is able to retrieve the correct model,
+for data sets simulated from a range of different scenarios encompassed by the GIM model. Section~4 contains a discussion of our findings.   
+
+%\begin{figure}[h] 
+%\graphicspath{ {./} }
+%\centering         
+%%\includegraphics[width=7.5cm, angle=0]{IIMfull1.png} % width changes size
+%\includegraphics[width=10cm, angle=0]{IIMfull1.png}
+%\vspace*{-0.25cm}     % manual adjustment of vertical spacing
+%\caption{The isolation-with-initial-migration (IIM)  model \citep{Herbots2012,Costa2017}. Population size parameters $a$, $b$, $c_{1}$, and $c_{2}$ are in units of $2N$ homologous DNA sequences, where $N$ is the effective population size of the species on the left of the diagram, during the migration stage of the model. From a forward-in-time perspective, $\tau_{0}$ denotes the splitting time of the ancestral population, which is the beginning of the gene flow stage; after $\tau_{1}$, gene flow ceases. The rates of gene flow are represented by $m_{1}$ and $m_{2}$.}      % a meaningful caption
+%\label{fig:IIMfull1} % label for the figure
+%\end{figure}  
+
+%\begin{figure}[h] 
+%\graphicspath{ {./} }
+%\centering         
+%%\includegraphics[width=10.5cm, angle=0]{IIMnested.png} % width changes size
+%\includegraphics[width=15cm, angle=0]{IIMnested.png} % width changes size
+%\vspace*{-0.25cm}     % manual adjustment of vertical spacing
+%\caption{Three models of divergence nested in the isolation-with-initial-migration (IIM) model. The parameters have the same meaning as in Figure \ref{fig:IIMfull1}.}      % a meaningful caption
+%\label{fig:IIMnested} % label for the figure
+%\end{figure}  
+
+%This paper follows a series of papers on estimation methods  which are based on explicit likelihood expressions and are suited for multilocus data sets. The likelihood of the number of pairwise nucleotide differences under the IM model was derived  in \citet{Herbots2008} and later extended to the isolation-with-initial-migration (IIM) model in \citet{Herbots2012} and \citet{Costa2017}. The results of  \citet{Lohse2011} for the IM model included the likelihood of data on triplets of sequences and are based on the solution of systems of generating functions. Making use of spectral decomposition and lumpability of continuous-time Markov chains, \citet{Andersen2014} obtained explicit results for an IM model with an arbitrary number of lineages in an arbitrary number of populations. \citet{Lohse2014} derived the likelihood of mutational configurations for triplets of sequences from three populations under a scenario of instantaneous unidirectional admixture and a scenario of ancestral structure.
+
+%\begin{figure}[t] 
+%\graphicspath{ {./} }
+%\centering         
+%%\includegraphics[width=10.5cm, angle=0]{GIM.png} % width changes size
+%\includegraphics[width=15cm, angle=0]{GIM.png} % width changes size
+%\vspace*{-0.25cm}     % manual adjustment of vertical spacing
+%\caption{The full GIM model (centre) and two models of divergence nested in it. The parameters $m'_{1}$ and $m'_{2}$ in the full GIM model denote the rates of contemporary gene flow.  The remaining parameters have the same meaning as in Figure \ref{fig:IIMfull1}.}      % a meaningful caption
+%\label{fig:GIM} % label for the figure
+%\end{figure}  
+
+\section{The generalised isolation-with-migration model}
+
+The generalised isolation-with-migration (GIM) model considered in this paper can be described as an isolation-with-migration (IM) model which allows for a change of migration rates and descendant population sizes at some point in the past. It encompasses, as special cases,
+% nested within it, 
+the standard IM model, the isolation model (with or without a change of descendant population sizes), the isolation-with-initial-migration (IIM) model, and a model of secondary contact.
+
+We assume that, time $\tau_0$ ago ($\tau_0>0$), a panmictic ancestral population instantaneously split into  
+two descendant populations which subsequently may have experienced 
+%or: been subject to
+gene flow in one or both directions until the present time. Time $\tau_1$ ago ($0<\tau_1<\tau_0$), the population sizes and migration rates may have undergone an instantaneous change. Between times
+$\tau_0$ and $\tau_1$ ago, and between time $\tau_1$ ago and the present, the 
+migration rates and population sizes are assumed to have been constant.
+%or:  We assume that, time $\tau_0$ ago ($\tau_0>0$), a panmictic ancestral population instantaneously split into  
+%two descendant populations which subsequently exchanged migrants at constant rates
+%($\geq 0$) in both directions until time $\tau_1$ ago ($0<\tau_1<\tau_0$), when the migration 
+%rates and population sizes may have undergone an instantaneous change;
+%%or: may have changed instantaneously;
+%migration then occurred at the new rates ($\geq 0$) in both directions until the present time.
+%This model, along with some of the special cases mentioned above, is illustrated in Figure~\ref{models}.
+This model is illustrated in Figure~\ref{models}d.
+For now, we restrict our attention to DNA sequences at a single locus that is not subject to intralocus recombination. 
+%The ancestral population is assumed to have been of constant size $[2aN]$ sequences until the split occurred time $\tau_0$ ago, 
+%where $N$ is large and where $[\cdot]$ denotes the integer part function. 
+%Between times $\tau_0$ and $\tau_1$ ago, the two descendant populations were of size $2N$ sequences and $[2bN]$ %sequences, respectively; from time $\tau_1$ ago until the present, the descendant population sizes were $[2c_1N]$ and 
+%$[2c_2N]$ sequences, respectively. Our choice of descendant population~1 between times $\tau_0$ and $\tau_1$ ago as the %``reference" population of size $2N$, relative to which all other population sizes are measured, was made for the sake of %consistency with our earlier work (Wilkinson-Herbots 2008, 2012, 2015; Costa and Wilkinson-Herbots 2017) and for mathematical %convenience; choosing another population as the reference population merely corresponds to using a different time-scale to that %used in this paper.  
+For mathematical convenience and for the sake of consistency with our earlier work 
+\citep{Herbots2008,Herbots2012,Herbots2015,Costa2017}, the size of descendant population~1 between times $\tau_0$ and $\tau_1$ ago is assumed to be 
+$2N$ sequences, where $N$ is large, and all other population sizes are expressed as fractions or multiples of $2N$. The ancestral population is assumed to have been of constant size $[2aN]$ sequences ($a>0$) until the split occurred time 
+$\tau_0$ ago, where $[\cdot]$ denotes the integer part function. Between times $\tau_0$ and $\tau_1$ ago, descendant population~2 was of size $[2bN]$ sequences ($b>0$). From time $\tau_1$ ago until the present, the descendant population sizes were $[2c_1N]$ and $[2c_2N]$ sequences, respectively ($c_1, c_2 > 0$). 
+We further assume that the populations evolve in discrete non-overlapping generations, and that reproduction within each population follows the neutral Wright-Fisher model \citep{Fisher1930,Wright1931}.
+%For $i,j \in \{1,2\}$, we denote by $m_i$ the proportion of descendant population~$i$ that are immigrants from descendant %population~$j \neq i$ in each generation between times $\tau_0$ and $\tau_1$ ago, and the migration rates $m'_i$ per generation %between time $\tau_1$ ago and the present are defined analogously.
+Between times $\tau_0$ and $\tau_1$ ago, there may be gene flow 
+%or: gene flow may occur
+between the two descendant populations, at a constant rate in each direction: we assume that in each generation, a fraction $m_i \geq 0$ of descendant population~$i$ are immigrants from descendant population~$j$ ($i, j \in \{1,2\}$ with $j \neq i$), i.e. $m_i$ denotes the migration rate per generation from population~$i$ to population~$j$ backward in time. 
+%Similarly, $m'_i \ geq 0$ denotes the proportion of subpopulation~$i$ that are immigrants from subpopulation~$j$ in each 
+%generation between time~$\tau_1$ ago and the present.
+For the period from time $\tau_1$ ago until the present, the backward migration rates $m'_i \geq 0$ ($i=1,2$) are defined analogously. 
+It is assumed that each generation, Wright–Fisher type reproduction within the descendant populations restores them to their stated
+%or: original?
+sizes, i.e., reproduction undoes any decrease or increase in population sizes caused by gene flow.
+As is standard in coalescent theory, we will measure time in units of $2N$ generations 
+(this also applies to the times $\tau_0$ and $\tau_1$), and we define the `scaled' migration
+rates backward in time by $M_i=4Nm_i$ and $M'_i=4Nm'_i$, for $i=1,2$.
+
+\subsection{The coalescent under the GIM model}
+
+Tracing back the ancestry of a sample of sequences taken from the present generation (from one or both descendant populations), any two ancestral lineages will coalesce when their most recent common ancestor is reached; lineages can only coalesce when they are in the same population. Working backward in time, the genealogical process of a sample of sequences can be described by a succession of three Markov Chains. Between the present and time $\tau_1$ ago, the genealogy of a sample of sequences is
+%, for large $N$ (i.e. large population sizes), 
+well approximated by the `structured coalescent' \citep{Takahata1988,Notohara1990,Herbots1997,Kozakai2016}, which is a continuous-time Markov Chain keeping track of 
+the number of distinct ancestral lineages the sample has in each subpopulation, at each time in the past.
+%or: the number of distinct ancestral lineages of the sample in each subpopulation, at each time in the past.
+%or: the number of distinct ancestral lineages of a sample of sequences from a subdivided population and their locations, at each time in the past. 
+As time is measured in units of $2N$ generations and $N$ is large, the coalescence rate of any two lineages residing in descendant population~$i$ is $1/c_i$, and each lineage moves from descendant population~$i$ to descendant population~$j$ at
+rate $M'_i/2$ (for $i,j \in \{1,2\}$ with $j \neq i$). Between times $\tau_1$ and $\tau_0$ ago, the genealogy of a sample of sequences
+is again described by the structured coalescent, but now with coalescence rate~1 for any two lineages in descendant population~1, coalescence rate $1/b$ for any two lineages in descendant population~2, and migration rate $M_i/2$ for any lineage in descendant population~$i$. From time $\tau_0$ ago
+%onwards 
+further back into the past, the genealogy of a sample of sequences follows Kingman's coalescent \citep{Kingman1982c, Kingman1982a, Kingman1982b}, with any pair of lineages coalescing at rate $1/a$. In what follows, we will refer to the stochastic process described above as the `coalescent under the GIM model'.
+
+In this paper we will focus on the genealogy of one pair of sequences sampled from the present populations. From the present until time $\tau_0$ ago, this coalescent process has four possible states: state~1, if there are two ancestral lineages in descendant population~1;
+%state~2, if there is one lineage in each of the two descendant populations; state~3, if there are two lineages in descendant population~2;  
+state~2, if there are two lineages in descendant population~2; state~3, if there is one lineage in each descendant population; 
+% swapping states in the matrices later on leads to confusion in subsequent equations and results, where i in the LHS (Ti or Si) does not correspond to i in the matrix entries in the RHS. So better to define the states in accordance with the rows and cols of the matrices.
+and state~4, if coalescence has occurred. Beyond time $\tau_0$ into the past, there are only two possible situations: either there are two distinct ancestral lineages or coalescence has occurred. However, to facilitate the derivation of the coalescence time (the time since the most recent common ancestor of the two sampled sequences), we let the process have four states even beyond time $\tau_0$ into the past: if the coalescent process reaches time $\tau_0$ in state~$i$ ($i \in \{1,2,3 \}$), then the process remains in that state until the two lineages coalesce, at which time the process moves to state~4. The coalescent process thus forms a non-homogeneous continuous-time Markov Chain with state space 
+%$\mathcal{S}=
+$\{1,2,3,4\}$, and with piecewise constant transition rates which change at times $\tau_1$ and $\tau_0$.
+The process starts in state 1, 2 or 3, depending on whether two DNA sequences are sampled both from descendant population~1,
+% one sequence from each descendant population, or two sequences both from descendant population~2. 
+both from descendant population~2, or one sequence from each descendant population. 
+The process is absorbed when the two ancestral lineages coalesce at their most recent common ancestor, i.e. when the process reaches state~4. We will derive the distribution of the coalescence time, $T_i$, of the two sampled sequences, i.e. the distribution of 
+the time until the coalescent process is absorbed into state~4, starting from state~$i$, for $i=1,2,3$.
+%or: We denote by $T_i$ the coalescence time of the two sampled sequences, i.e. the time until the coalescent process is absorbed into state~4, starting from state~$i$, for $i=1,2,3$.
+
+
+%  S(i) here or later?
+
+
+%Throughout this paper we assume that selectively neutral mutations occur according to the infinite sites model described by Watterson~(1975), where every gene is an infinite sequence of nucleotide sites and no two mutations ever occur at the same site. The number of mutating sites per gene per generation is Poisson distributed with mean $\mu$, and $\theta = 4N \mu$ denotes the scaled mutation rate. We denote by $S_{ij}$ the number of nucleotide differences between two genes sampled at randomfrom descendant populations~$i$ and~$j$ ($i,j=1, \ldots, n$). Under the infinite sites model, $S_{ij}$ is simply the total number of mutations that have accumulated on the two genes' ancestral lineages since their most recent common ancestor, i.e. during a time period of length $T_{ij}$ (in units of $2N$ generations). Assuming that mutations occur independently on different lineages and in different generations, the conditional distribution of $S_{ij}$ given $T_{ij}=t$ is Poisson with mean $2Nt \times \mu \times 2 = \theta t$. The mean and variance of the number of nucleotide differences  can thus easily be obtained from the mean and variance of the coalescence time:
+%\begin{equation}
+%E(S_{ij}) = \theta E(T_{ij})
+%\label{E_S}
+%\end{equation}
+%and
+%\begin{equation}
+%\mbox{Var}(S_{ij}) = E[\mbox{Var}(S_{ij} \, | \, T_{ij})] + 
+%\mbox{Var}[E(S_{ij} \, | \, T_{ij})] 
+% = \theta E(T_{ij}) + \theta^2 \mbox{Var}(T_{ij}).
+%\label{Var_S}
+%\end{equation}
+%Furthermore, the probability that two genes sampled at random from descendant populations~$i$ and~$j$ differ at $k$ nucleotide sites is given by
+%\begin{equation}
+%P(S_{ij}=k) = 
+%E\left( e^{-\theta T_{ij}} \frac{ \left(\theta T_{ij}\right)^k }{k!} \right)
+%\label{distribution_S}
+%\end{equation}
+%for $k=0,1,2,\ldots$
+
+% end of text from TPB IIM paper
+
+
+%\subsection{The coalescent under the GIM model}
+
+Formally, for a sample of two sequences, the coalescent under the GIM model is defined 
+by the following three infinitesimal generator matrices. When $0 \leq t \leq \tau_{1}$,
+%\small
+\begin{equation}
+\label{matrix:Q1}
+\renewcommand{\arraystretch}{1.5}
+\mathbf{Q_{1}}=\begin{array}{c}
+\begin{bmatrix}
+				-\left(\frac{1}{c_{1}}+M'_{1}\right) & 0 & M'_{1} & \frac{1}{c_{1}} & \\
+			          0 & -\left(\frac{1}{c_{2}}+M'_{2}\right) & M'_{2} & \frac{1}{c_{2}} & \\
+				\frac{M'_{2}}{2} & \frac{M'_{1}}{2} & -\left(\frac{M'_{1}+M'_{2}}{2}\right) & 0 &\\
+			          0 & 0 & 0 & 0 &
+\end{bmatrix}
+\end{array}
+\end{equation} 
+%\normalsize
+% swapping states in the matrices later on leads to confusion in subsequent equations and results, where i in the LHS (Ti or Si) does not correspond to i in the matrix entries in the RHS. So better have rows and columns in the same order as states 1,2 ,3, 4.
+%previous version: 
+%\small
+%\begin{equation}
+%\label{matrix:Q1}
+%\renewcommand{\arraystretch}{1.5}
+%\mathbf{Q_{1}}=\kbordermatrix{~&(1)&(3)&(2)&(4)\\
+%				(1)&-\left(\frac{1}{c_{1}}+M'_{1}\right)&M'_{1}&0&\frac{1}{c_{1}}\\
+%				(3)&\frac{M'_{2}}{2}&-\left(\frac{M'_{1}+M'_{2}}{2}\right)&\frac{M'_{1}}{2}&0\\
+%			    (2)&0&M'_{2}&-\left(\frac{1}{c_{2}}+M'_{2}\right)&\frac{1}{c_{2}}\\
+%			    (4)&0&0&0&0}\, 
+%\end{equation} \normalsize
+\citep{Takahata1988,Notohara1990,Herbots1997,Kozakai2016}.
+% better give the coalescence and migration rates here instead of earlier?
+%, where \small $M'_{i}/2=2N m'_{i}$ \normalsize is the rate of migration of a single lineage when in population $i$ ($i \in \{1,2\}$).  %The rate \small $\frac{1}{c_{i}}$ \normalsize is the rate of coalescence of two lineages if both are in population $i$. 
+%Note that, for mathematical and notational convenience, state 2 corresponds to row and column 3, whereas state 3 corresponds to row and column 2: this makes $\mathbf{Q_{1}}$ as symmetric as possible, while reserving states 1 and 2 for the states in which two lineages reside both in population~1, or both in population~2, respectively. 
+%are present in population 1 and population 2 respectively. 
+Similarly, if $\tau_{1}< t \leq \tau_{0}$, 
+%\small
+\begin{equation}
+\label{matrix:Q2}
+\renewcommand{\arraystretch}{1.5}
+\mathbf{Q_{2}}=\begin{array}{c}
+\begin{bmatrix}
+				-\left(1+M_{1}\right) & 0 & M_{1} & 1 &\\
+			          0 & -\left(\frac{1}{b}+M_{2}\right) & M_{2} & \frac{1}{b} & \\
+                                          \frac{M_{2}}{2} & \frac{M_{1}}{2} & -\left(\frac{M_{1}+M_{2}}{2}\right) & 0 & \\
+			          0 & 0 & 0 & 0 &
+\end{bmatrix}
+\end{array}.
+\end{equation} 
+%\normalsize
+%\small
+%\begin{equation}
+%\label{matrix:Q2}
+%\renewcommand{\arraystretch}{1.5}
+%\mathbf{Q_{2}}=\kbordermatrix{~&(1)&(3)&(2)&(4)\\
+%				(1)&-\left(1+M_{1}\right)&M_{1}&0&1\\
+%				(3)&\frac{M_{2}}{2}&-\left(\frac{M_{1}+M_{2}}{2}\right)&\frac{M_{1}}{2}&0\\
+%			    (2)&0&M_{2}&-\left(\frac{1}{b}+M_{2}\right)&\frac{1}{b}\\
+%			    (4)&0&0&0&0}\, .
+%\end{equation} \normalsize
+%where $1$ and \small $\frac{1}{b}$ \normalsize are the coalescence rates of two lineages in population 1 and population 2 respectively, and \small $M_{i}/2= 2N m_{i}$\normalsize. 
+Finally, for $t > \tau_{0}$, 
+%\small
+\begin{equation}
+\label{matrix:Q3}
+\renewcommand{\arraystretch}{1.5}
+\mathbf{Q_{3}}=\begin{array}{c}
+\begin{bmatrix}
+				-\frac{1}{a}&0&0&\frac{1}{a}&\!\!\\
+				0&-\frac{1}{a}&0&\frac{1}{a}&\!\!\\
+				0&0&-\frac{1}{a}&\frac{1}{a}&\!\!\\ 
+				0&0&0&0&\!\!
+\end{bmatrix}
+\end{array} 
+\end{equation}
+%\normalsize 
+%\small
+%\begin{equation}
+%\label{matrix:Q3}
+%\renewcommand{\arraystretch}{1.5}
+%\mathbf{Q_{3}}=\kbordermatrix{~&(1)&(3)&(2)&(4)\\
+%				(1)&-\frac{1}{a}&0&0&\frac{1}{a}\\
+%				(3)&0&-\frac{1}{a}&0&\frac{1}{a}\\
+%				(2)&0&0&-\frac{1}{a}&\frac{1}{a}\\ 
+%				(4)&0&0&0&0}\, 
+%\end{equation}\normalsize 
+\citep{Kingman1982c, Kingman1982a, Kingman1982b}.
+%, where $\frac{1}{a}$ is the rate of coalescence of two lineages in the ancestral population.
+
+%The matrix of transition probabilities $\mathbf{P}(t)$ of the coalescent under the GIM model has the following form:
+%The transition matrix $\mathbf{P}(t):=\mathbf{P}(0,t)$, whose $(i,j)$ entry gives the probability that the coalescent under the GIM model moves from state~$i$ at time $0$ to state~$j$ at time~$t$ ($i,j \in \{1,2,3,4\}$), has the following form:  
+We denote by $\mathbf{P}(t):=\mathbf{P}(0,t)$ the transition matrix whose $(i,j)$ entry gives the probability that the coalescent under the GIM model moves from state~$i$ at time $0$ to state~$j$ at time~$t$ ($i,j \in \{1,2,3,4\}$). This transition matrix has the following form:
+% from here onwards things get confusing as to whether i and j correspond to states or rows/columns, if row/col 2 correspond to state 3 and vice versa
+%\small
+\begin{equation}
+\label{eq:tran_prob_matrix}
+\begin{array}{lcl}
+\mathbf{P}(t) &=& \left\{
+  \begin{array}{l l}
+    e^{\mathbf{Q_{1}}t}\quad& \quad \text{for } 0 \leq t \leq \tau_{1},\\
+   e^{\mathbf{Q_{1}}\tau_{1}}\, e^{\mathbf{Q_{2}}\left(t-\tau_{1}\right)} \quad  & \quad \text{for } \tau_{1} < t \leq \tau_{0},\\
+   e^{\mathbf{Q_{1}}\tau_{1}}\, e^{\mathbf{Q_{2}}\left(\tau_{0}-\tau_{1}\right)}\,e^{\mathbf{Q_{3}}\left(t-\tau_{0}\right)}\quad & \quad \text{for }\tau_{0} < t< \infty,\\
+0\quad &\quad \text{otherwise}.
+  \end{array} \right.\\
+  \end{array}
+\end{equation}
+%\normalsize
+%Recall that all time and population size parameters are assumed strictly positive. 
+%In previous work we proved that if both \small $M_1>0$ \normalsize and \small $M_2>0$\normalsize, the matrix $\mathbf{Q_{2}}$ %is diagonalisable and has non-positive, real eigenvalues (\citealp{Costa2017}, Appendix~A, parts~(ii) and~(iii)).
+In previous work (\citealp{Costa2017}, Appendix~A, parts~(ii) and~(iii)) we proved\footnote{On a technical note: whereas for the proof in \citet{Costa2017}, both the second and third row and the second and third column of $\mathbf{Q_{2}}$ were swapped round for mathematical convenience, such re-ordering of states does not affect the diagonalisability nor the eigenvalues of 
+$\mathbf{Q_{2}}$.} that if both $M_1>0$ and $M_2>0$, the matrix $\mathbf{Q_{2}}$ is diagonalisable and has non-positive, real eigenvalues; it was shown that three of the eigenvalues are strictly negative and one is zero.
+% to see this: the characteristic polynomial doesn't change if two rows AND the corresponding two columns are both swapped round; 
+% alternative explanation: swapping columns 2 and 3 can be done by multiplying on the right by the elementary matrix E23 (the identity matrix with cols 2 and 3 swapped round); swapping rows 2 and 3 can be done by multiplying on the left by E23; note that E23 is equal to its own inverse E23^{-1}; so if Q=G^{-1}AG, then E23^{-1} Q E23 = (G E23)^{-1} A (G E23).  
+A similar argument shows that if both $M'_1>0$ and $M'_2>0$, the matrix $\mathbf{Q_{1}}$ is diagonalisable,
+% and has non-positive, real eigenvalues.
+with three strictly negative eigenvalues and one zero eigenvalue.
+%
+%%Furthermore, the matrix $\mathbf{Q_{3}}$ has eigenvalues \small $\left(0,-1/a, -1/a, -1/a\right)$\normalsize, with four 
+%%independent right eigenvectors given in the columns of
+%%\small
+%%\begin{equation}
+%%\label{eq:eigenmat}
+%%\begin{array}{c}
+%%\begin {bmatrix} 
+%%1 &0&1&0\\ 
+%%1 &1&0&0\\
+%%1& 0&0&1\\
+%%1&0&0&0
+%%\end{bmatrix}
+%%\end{array},
+%%\end{equation}
+%%\normalsize
+%%so  $\mathbf{Q_{3}}$ is also diagonalisable.
+%Furthermore, the matrix $\mathbf{Q_{3}}$ has eigenvalues \small $\left(-1/a, -1/a, -1/a, 0\right)$\normalsize, with four %independent left eigenvectors given in the rows of
+%\small
+%\begin{equation}
+%\label{eq:eigenmat}
+%\mathbf{D} = \begin{array}{c}
+%\begin {bmatrix} 
+%1&0&0&-1\\ 
+%0&0&1&-1\\
+%0&1&0&-1\\
+%0&0&0&1
+%\end{bmatrix}
+%\end{array},
+%\end{equation}
+%\normalsize
+%so  $\mathbf{Q_{3}}$ is also diagonalisable.
+Hence, for $M_{1}, M_{2},M'_{1}, M'_{2} >0$, the transition matrix $\mathbf{P}(t)$ can be written as:
+%\small
+\begin{equation}
+\label{eq:p(t)_decomposition}
+\begin{array}{lcl}
+ \mathbf{P}(t) &=&\left\{
+  \begin{array}{l l}
+    \mathbf{G^{-1}}e^{\mathbf{-A}t}\mathbf{G}\quad& \quad \text{for } 0 \leq t \leq \tau_{1},\\
+   \mathbf{G^{-1}}e^{\mathbf{-A}\tau_{1}}\mathbf{G}\,\mathbf{C^{-1}}e^{\mathbf{-B}(t-\tau_{1})}\mathbf{C}  \quad  & \quad \text{for } \tau_{1} < t \leq \tau_{0},\\
+   \mathbf{G^{-1}}e^{\mathbf{-A}\tau_{1}}\mathbf{G}\,\mathbf{C^{-1}}e^{\mathbf{-B}(\tau_{0}-\tau_{1})}\mathbf{C}\, e^{\mathbf{Q_{3}}\left(t-\tau_{0}\right)} \,  & \quad \text{for } \tau_{0} < t< \infty,\\
+%\mathbf{D^{-1}}e^{\mathbf{-\Gamma}(t-\tau_{0})}\mathbf{D} \,  & \quad \text{for } \tau_{0} < t< \infty,\\
+0\quad &\quad \text{otherwise},
+  \end{array} \right.
+  \end{array}
+\end{equation} 
+%\normalsize
+%where $\mathbf{G}$, $\mathbf{C}$ and $\mathbf{D}$ are the matrices whose rows contain the left eigenvectors of $\mathbf{Q_{1}}$, $\mathbf{Q_{2}}$ and $\mathbf{Q_{3}}$ respectively, and $\mathbf{-A}$, $\mathbf{-B}$ and $\boldsymbol{-\Gamma}$ are the corresponding diagonal matrices of non-positive, real eigenvalues. The entries in the main diagonals of $\mathbf{A}$, $\mathbf{B}$ and $\mathbf{\Gamma}$ contain the absolute values of the eigenvalues, and  are represented by the letters $\alpha_{i}=\mathbf{(A)}_{ii}$, $\beta_{i}=\mathbf{(B)}_{ii}$ and $\gamma_{i}=\mathbf{(\Gamma)}_{ii}$.
+where $\mathbf{G}$ and $\mathbf{C}$ are the matrices whose rows contain the left eigenvectors of $\mathbf{Q_{1}}$ and $\mathbf{Q_{2}}$ respectively, and where $\mathbf{-A}$ and $\mathbf{-B}$ are the corresponding diagonal matrices of non-positive, real eigenvalues. The entries in the main diagonals of $\mathbf{A}$ and $\mathbf{B}$ contain the absolute values of the eigenvalues, and  are represented by the letters $\alpha_{i}=\mathbf{(A)}_{ii}$ and $\beta_{i}=\mathbf{(B)}_{ii}$.
+
+If  $M'_1=M'_2=0$, 
+%then the rows of the matrix~$\mathbf{D}$ given in equation~(\ref{eq:eigenmat}) are also four independent left eigenvectors of  $\mathbf{Q_1}$, with eigenvalues  \small $\left( -1/c_{1}, -1/c_{2},0,0 \right)\,$\normalsize, so  $\mathbf{Q_1}$ is still diagonalisable.
+then the  matrix $\mathbf{Q_1}$  has eigenvalues 
+%\small 
+$\left( -1/c_{1}, -1/c_{2},0,0 \right)$,
+%\normalsize, 
+with four linearly independent left eigenvectors given by the rows of 
+%\small
+$$
+%\begin{equation}
+%\label{eq:eigenmat}
+\mathbf{D} = \begin{array}{c}
+\begin {bmatrix} 
+1&0&0&-1\\ 
+0&1&0&-1\\
+0&0&1&-1\\
+0&0&0&1
+\end{bmatrix}
+\end{array},
+%\end{equation}
+$$
+%\normalsize
+so  $\mathbf{Q_1}$ is still diagonalisable.
+The same holds for the matrix $\mathbf{Q_2}$ when $M_1=M_2=0$, with eigenvalues $\left( -1, -1/b,0,0 \right)$. So if there is no gene flow between times $\tau_{0}$ and $\tau_{1}$ ago, or no gene flow between time $\tau_{1}$ ago and the present, the transition matrix $\mathbf{P}(t)$ can still be decomposed as in equation (\ref{eq:p(t)_decomposition}), where in that case the matrices $\mathbf{G}$ or $\mathbf{C}$ (or both) are equal to $\mathbf{D}$. 
+%If a matrix $\mathbf{Q}$ is a generator matrix of a migration stage in the GIM model, with migration parameters \small $M_{i}=M_{j}=0$  ($i, j \in \left\lbrace 1,2 \right\rbrace$ \normalsize and \small $i \neq j$) \normalsize and relative population size parameters $c_{i}$ and $c_{j}$, then its left eigenvectors are those shown in the rows of the matrix $\mathbf{D}$ given in (\ref{eq:eigenmat}) and  its vector of eigenvalues is \small $\left( -1/c_{1}, -1/c_{2},0,0 \right)\,$. \normalsize So when there is no gene flow between $\tau_{0}$ and $\tau_{1}$, or no gene flow between $\tau_{1}$ and the present, $\mathbf{P}(t)$ can still be decomposed as in equation (\ref{eq:p(t)_decomposition}). 
+
+%In addition, 
+Furthermore, for all values of $M'_1$ and $M'_2$, the characteristic polynomial of $\mathbf{Q_1}$, denoted $\mathcal{P}_{\mathbf{Q_1}}(x)$, is of the form $\left(x \cdot \mathcal{P}_{\mathbf{Q_1^{\left(r\right)}}}(x) \right)$, where $\mathbf{Q_1^{\left(r\right)}}$ is the $3 \times 3$ upper-left submatrix of $\mathbf{Q_1}$. So $\mathbf{Q_1}$ has a zero eigenvalue and its three remaining eigenvalues are the eigenvalues of $\mathbf{Q_1^{\left(r\right)}}$. 
+%If $M'_{i}=0$ and $M'_{j}>0$  ($i, j \in \left\lbrace 1,2 \right\rbrace$ with $i \neq j$), 
+%%the matrix $\mathbf{Q_1^{\left(r\right)}}$ becomes triangular [no longer true if 2nd and 3rd row/col are not swapped round]
+%then it is easily seen that in this case
+%the eigenvalues of $\mathbf{Q_1^{\left(r\right)}}$ are the entries in its main diagonal. 
+If $M'_{i}=0$ and $M'_{j}>0$  ($i, j \in \left\lbrace 1,2 \right\rbrace$ with $i \neq j$) 
+then, because of the resulting zero entries in $\mathbf{Q_1^{\left(r\right)}}$, it is easily seen that in this case
+its eigenvalues are the entries in its main diagonal. 
+%Hence the vector of eigenvalues of $\mathbf{Q_1}$ will be $\boldsymbol{\alpha}=\left[-1/c_{i} \;\: -M'_{j}/2 \;\: -(1/c_{j}+M'_{j} ) \;\: 0 \right]^{\intercal}$. 
+Hence the eigenvalues of $\mathbf{Q_1}$ will be $\left(-1/c_{i} ,  -(1/c_{j}+M'_{j} ) , -M'_{j}/2 , 0 \right)$. 
+%which are, again, real and non-positive.
+%If there are no repeated eigenvalues in $\boldsymbol{\lambda}$, we can be sure that $\mathbf{Q}$ is diagonalisable (and its eigenvalues are non-positive and real). 
+If these four eigenvalues are all distinct, then $\mathbf{Q_1}$ is diagonalisable.
+% (and clearly its eigenvalues are real and non-positive). 
+Thus, even if there is unidirectional gene flow between time $\tau_{1}$ ago and the present, 
+%or between $\tau_{0}$ and $\tau_{1}$, 
+the transition matrix $\mathbf{P}(t)$ can still be decomposed as in equation~(\ref{eq:p(t)_decomposition}), 
+%as long as there are no repeated entries in $\boldsymbol{\lambda}$. 
+provided $\mathbf{Q_1}$ has no repeated eigenvalues.
+Two comments are in order here: first, repeated eigenvalues will occur if and only if $1/c_{i} = M'_{j}/2 $ or $1/c_{i} = 1/c_{j}+M'_{j}$;
+%or: if and only if \small $M'_j \in \{2/c_i, 1/c_i - 1/c_j \}$\normalsize;
+ second, the set of parameter values that make these equalities true is negligible when compared to the whole parameter space, so it is very unlikely that the likelihood maximisation procedure would choose values from this set (although one should be careful to avoid using them as initial values). 
+Similarly, if there is unidirectional gene flow between times $\tau_{0}$ and $\tau_{1}$ ago (i.e. $M_{i}=0$ and $M_{j}>0$ for  $i, j \in \left\lbrace 1,2 \right\rbrace$ with $i \neq j$), equation~(\ref{eq:p(t)_decomposition}) still holds, provided $\mathbf{Q_2}$ has no repeated eigenvalues, i.e. provided the entries on the main diagonal of $\mathbf{Q_2}$ are all distinct, which is again the case 
+%except for a negligible subset of the parameter space. 
+for all but a negligible subset of the parameter space. 
+%OR: In addition, if a matrix $\mathbf{Q}$ is the generator matrix of a migration stage in the GIM model, the characteristic polynomial of $\mathbf{Q}$, denoted $\mathcal{P}_{\mathbf{Q}}(\alpha)$, is of the form $\alpha \times \mathcal{P}_{\mathbf{Q^{\left(r\right)}}}(\alpha)$, where $\mathbf{Q^{\left(r\right)}}$ is the three by three upper-left submatrix of $\mathbf{Q}$. So $\mathbf{Q}$ has a zero eigenvalue and its three remaining eigenvalues are the eigenvalues of $\mathbf{Q^{\left(r\right)}}$. If $\mathbf{Q}$ has migration parameters \small $M_{i}=0$ \normalsize and \small $M_{j}>0$ \small  ($i, j \in \left\lbrace 1,2 \right\rbrace$ \normalsize with \small $i \neq j$)\normalsize , the matrix \normalsize $\mathbf{Q^{\left(r\right)}}$ becomes triangular. The eigenvalues of $\mathbf{Q^{\left(r\right)}}$ will be the entries in its main diagonal. Hence if $\mathbf{Q}$ has population size parameters $c_1$ and $c_2$,  the eigenvalues of $\mathbf{Q}$ will be  \small $\left(-1/c_{i} , -M_{j}/2 , -(1/c_{j}+M_{j} ) , 0 \right)$ \normalsize which are, again, real and non-positive. If these four eigenvalues are all distinct, then $\mathbf{Q}$ is diagonalisable. Thus, even if there is unidirectional gene flow between time $\tau_{1}$ ago and the present, or between times $\tau_{0}$ and $\tau_{1}$ ago, the transition matrix \small $\mathbf{P}(t)$ \normalsize can still be decomposed as in (\ref{eq:p(t)_decomposition}), provided $\mathbf{Q}$ has no repeated eigenvalues. Two comments are in order here: first, repeated eigenvalues will occur if and only if \small $1/c_{i} = M_{j}/2 $ \normalsize or \small $1/c_{i} = 1/c_{j}+M_{j}$\normalsize; second, the set of parameter values that make these equalities true is negligible when compared to the whole parameter space, so it is very unlikely that the likelihood maximisation procedure would choose values from this set (although one should be careful to avoid using them as initial values). 
+
+The probability that, starting in state $i$ ($i \in \{1,2,3\}$), the process has reached state 4 by time $t$ is given by the entry corresponding to the $i^{\mathrm{th}}$ row and 4$^{\mathrm{th}}$ column of the transition matrix $\mathbf{P}(t)$. This is also the cumulative distribution function 
+%(\textit{cdf}) 
+of the coalescence time $T_{i}$, which we denote $F_{T_{i}}(t)$. If the initial state is $i$, and $p^{(1)}_{ij}(t)$, $p^{(2)}_{jl}(t)$ and $p^{(3)}_{l4}(t)$ denote transition probabilities of the homogeneous continuous-time Markov chains with generator matrices $\mathbf{Q_{1}}$, $\mathbf{Q_{2}}$ and $\mathbf{Q_{3}}$ respectively, then:
+%or: Denoting the transition probabilities of the time-homogeneous Markov chains with generator matrices $\mathbf{Q_{1}}$, $\mathbf{Q_{2}}$ and $\mathbf{Q_{3}}$ respectively by $p^{(1)}_{jk}(t)$, $p^{(2)}_{jk}(t)$ and $p^{(3)}_{jk}(t)$, for $j,k \in \{1,2,3,4\}$, we have that
+%\small
+\begin{equation}
+\label{eq:cdf_T_1}
+F_{T_{i}}(t) = \left\{
+  \begin{array}{l l}
+   p^{(1)}_{i4}(t) & \quad \text{for }0 \leq t \leq \tau_{1},\\
+   \\
+    \displaystyle\sum_{j=1}^{4}p^{(1)}_{ij}(\tau_{1})\,p^{(2)}_{j4}(t-\tau_{1}) \quad  & \quad \text{for } \tau_{1} < t \leq \tau_{0},\\
+    \\
+ \displaystyle\sum_{j=1}^{4} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{4}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,p^{(3)}_{l4}(t-\tau_{0}) \quad& \quad\text{for } \tau_{0} < t< \infty,\\
+   \\
+0\quad &\quad \text{otherwise}.
+  \end{array} \right.
+\end{equation}
+%\normalsize
+Denoting by $H_{mn}$ the $(m,n)$ entry of a matrix $\mathbf{H}$, and by $H^{-1}_{mn}$ the $(m,n)$ entry of the matrix $\mathbf{H^{-1}}$, we have for $t \geq 0$ that $p^{(1)}_{ij}(t)=\sum_{k=1}^{4} G_{ik}^{-1}G_{kj}\,e^{-\alpha_{k}t}$ and $p^{(2)}_{jl}(t)=\sum_{k=1}^{4} C_{jk}^{-1}C_{kl}\,e^{-\beta_{k}t}$. 
+% and \small $p^{(3)}_{l4}(t)=\sum_{k=1}^{4} D_{lk}^{-1}D_{k4}\,e^{-\gamma_{k}t}$ \normalsize. 
+Furthermore, $p^{(3)}_{l4}(t)= 1-e^{-\frac{1}{a}t}$ for $l=1,2,3$, as the absorption time from state $l$ into state $4$ of the homogeneous continuous-time Markov Chain generated by $\mathbf{Q_{3}}$ is exponentially distributed with mean $a$. 
+%Denoting by $A_{mn}$ the $(m,n)$ entry of a matrix $\mathbf{A}$, and by $A^{-1}_{mn}$ the $(m,n)$ entry of the matrix $\mathbf{A^{-1}}$, we have that \small $p^{(1)}_{ij}(t)=\sum_{k=1}^{4} G_{ik}^{-1}G_{kj}\,e^{-\alpha_{k}t}$, $p^{(2)}_{ij}(t)=\sum_{k=1}^{4} C_{ik}^{-1}C_{kj}\,e^{-\beta_{k}t}$  \normalsize and \small $p^{(3)}_{i4}(t)=\sum_{k=1}^{4} D_{ik}^{-1}D_{k4}\,e^{-\gamma_{k}t}$ \normalsize. 
+%the latter = 1-exp(-t/a) for l=1,2,3, and =0 for l=4
+Using that $p^{(1)}_{44}(t)=p^{(2)}_{44}(t)=p^{(3)}_{44}(t)=1$ for all $t \geq 0$, differentiating equation~(\ref{eq:cdf_T_1}) gives the following expression for the probability density function of $T_{i}\,$:
+%\small
+\begin{equation}
+\label{eq:pdf_T_1}
+f_{T_{i}}(t) = \left\{
+  \begin{array}{l l}
+   f^{(1)}_{i}(t) & \quad \text{for }0 \leq t \leq \tau_{1},\\
+   \\
+    \displaystyle\sum_{j=1}^{3}p^{(1)}_{ij}(\tau_{1})\,f^{(2)}_{j}(t-\tau_{1}) \quad  & \quad \text{for }\tau_{1} < t \leq \tau_{0},\\
+    \\
+ \displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,f^{(3)}_{l}(t-\tau_{0}) \quad& \quad \text{for } \tau_{0} < t< \infty,\\
+   \\
+0\quad &\quad \text{otherwise},
+  \end{array} \right.
+\end{equation}
+%\normalsize
+where for $t>0$, $f^{(1)}_{i}(t)= -\sum_{k=1}^{4} \alpha_{k}\,G_{ik}^{-1}G_{k4}\,e^{-\alpha_{k}t}$, $f^{(2)}_{j}(t)= -\sum_{k=1}^{4} \beta_{k}\, C_{jk}^{-1}C_{k4}\,e^{-\beta_{k}t}$ and  $f^{(3)}_{l}(t)=
+%\sum_{k=1}^{4}-\gamma_{k}\, D_{lk}^{-1}D_{k4}\,e^{-\gamma_{k}t}
+\frac{1}{a} e^{-\frac{1}{a}t}$
+are the probability density functions of the absorption times into state~4 of the three homogeneous continuous-time Markov Chains generated by $\mathbf{Q_{1}}$, $\mathbf{Q_{2}}$ and $\mathbf{Q_{3}}$, starting in states~$i$, $j$ and $l$, respectively ($i,j,l \in \{1,2,3\}$).
+%or: are the probability density functions of the coalescence times of pairs of sequences in time-homogeneous coalescent processes governed by the generator matrices $\mathbf{Q_{1}}$, $\mathbf{Q_{2}}$ and $\mathbf{Q_{3}}$, starting in states~$i$, $j$ and $l$,  respectively.
+%where \small $f^{(1)}_{i}(t)=\sum_{k=1}^{4} -\alpha_{k}\,G_{ik}^{-1}G_{k4}\,e^{-\alpha_{k}t}$, $f^{(2)}_{i}(t)=\sum_{k=1}^{4}-\beta_{k}\, C_{ik}^{-1}C_{k4}\,e^{-\beta_{k}t}$ \normalsize and  \small $f^{(3)}_{i}(t)=\sum_{k=1}^{4}-\gamma_{k}\, D_{ik}^{-1}D_{k4}\,e^{-\gamma_{k}t}$. \normalsize
+
+
+
+\subsection{The distribution of the number of pairwise nucleotide differences}
+
+We assume that selectively neutral mutations occur according to the infinite sites model of \citet{Watterson1975}, in which 
+%each locus 
+the locus under consideration  
+consists of an infinite sequence of nucleotide sites and no two mutations ever occur at the same site;
+in each generation, the number of mutations occurring in a DNA sequence at this locus is Poisson distributed with mean $\mu$, and it is assumed that mutations occur independently in different DNA sequences and in different generations.
+% and $\theta = 4N \mu$ denotes the scaled mutation rate. 
+In the coalescent approximation, measuring time in units of $2N$ generations, mutations then accumulate on each ancestral lineage according to a Poisson process of rate $\theta/2$, where $\theta=4N\mu$ is the `scaled' mutation rate.
+Given the coalescence time $T_{i}$ of two DNA sequences,
+% at the locus concerned,
+%their number of segregating sites $S_{i}$ is Poisson distributed with mean $\theta T_{i}$
+the number of nucleotide differences between them, denoted by $S_i$, is simply the total number of mutations that have accumulated on their ancestral lineages since their most recent common ancestor, and hence is Poisson distributed with mean $\theta T_{i}$;
+as before, the subscript $i$ refers to the initial state of the coalescent process, corresponding to the sampling locations of the pair of DNA sequences ($i \in \{1,2,3\}$).
+Denoting $g_{s}(t):=\frac{(\theta t)^{s}}{s!}e^{-\theta t}$ and using equation~(\ref{eq:pdf_T_1}), 
+%the probability that two DNA sequences from sampling locations given by initial state $i \in \{1,2,3\}$ differ at $s$ nucleotide sites 
+the probability of $s$ nucleotide differences between the two sequences can be written as follows, for $s=0,1,2,\ldots$:
+%is given by: 
+%we have, for $s \in \{0,1,2,...\}$:
+%\small
+\begin{equation*}
+\begin{array}{lcl}
+\mathrm{P}(S_{i}=s)&=&\mathrm{E}[g_{s}(T_{i})]\\
+\\
+&=&\displaystyle\int_{0}^{\tau_{1}} \! g_{s}(t) \, f^{(1)}_{i}(t)\, \mathrm{d}t + \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\,\int_{\tau_{1}}^{\tau_{0}} \!g_{s}(t)\,f_{j}^{(2)}\left(t-\tau_{1}\right)\,\mathrm{d}t\\
+\\
+&&+  \displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\int_{\tau_{0}}^{\infty} \!g_{s}(t)\,f^{(3)}_{l}(t-\tau_{0})\,  \mathrm{d}t 
+\quad.
+\end{array}
+%\label{eq:likelihood_single_0}
+\end{equation*}
+%\normalsize
+%where $i$ is again the initial state of the coalescent, corresponding to the sampling locations of the two sequences.
+Changing the limits of integration, and using the expressions for $f^{(1)}_{i}(t)$, $f^{(2)}_{j}(t)$ and $f^{(3)}_{l}(t)$ given in the previous section, the above equation 
+%equation (\ref{eq:likelihood_single_0}) 
+becomes: 
+%\small
+\begin{eqnarray*}
+%\begin{array}{lcl}
+\mathrm{P}\left(S_{i}=s\right)&=&\displaystyle\int_{0}^{\tau_{1}} \! g_{s}(t) \, f^{(1)}_{i}(t) \, \mathrm{d}t + \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\,\int_{0}^{\tau_{0}-\tau_{1}} \!g_{s}(\tau_{1}+t)\,f_{j}^{(2)}\left(t\right)\,\mathrm{d}t\\
+&& +\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\int_{0}^{\infty} \!g_{s}(\tau_{0}+t)\,f^{(3)}_{l}(t) \,\mathrm{d}t 
+%\quad.
+\\
+\\
+&=&-\displaystyle \sum_{k=1}^{4}\alpha_{k}\,G^{-1}_{ik}G_{k4}\displaystyle\int_{0}^{\tau_{1}} \! g_{s}(t) \, e^{-\alpha_{k}t} \, \mathrm{d}t \\
+&&- \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\,\sum_{k=1}^{4} \beta_{k}\, C_{jk}^{-1}C_{k4}\,\displaystyle \int_{0}^{\tau_{0}-\tau_{1}} \!g_{s}(\tau_{1}+t)\,e^{-\beta_{k}t}\, \mathrm{d}t\\
+&& + \displaystyle \frac{1}{a} \, \displaystyle \sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\int_{0}^{\infty} \!g_{s}(\tau_{0}+t)\, e^{-\frac{1}{a}t} \, \mathrm{d}t \quad.\\
+%\end{array}
+\end{eqnarray*}
+%\normalsize
+Recall 
+%that \small $f^{(1)}_{i}(t)= -\sum_{k=1}^{4} \alpha_{k}\,G_{ik}^{-1}G_{k4}\,e^{-\alpha_{k}t}$, $f^{(2)}_{j}(t)=-\sum_{k=1}^{4} \beta_{k}\, C_{jk}^{-1}C_{k4}\,e^{-\beta_{k}t}$ \normalsize and \linebreak \small $f^{(3)}_{l}(t)=\frac{1}{a} e^{-\frac{1}{a}t}
+%%\sum_{k=1}^{4}-\gamma_{k}\, D_{lk}^{-1}D_{k4}\,e^{-\gamma_{k}t}$,  \normalsize and 
+that some eigenvalues of $\mathbf{Q_{1}}$ and $\mathbf{Q_{2}}$  
+%and \small $\mathbf{Q_{3}}$ \normalsize 
+are equal to zero, i.e. some of the $\alpha_{k}$ and $\beta_{k}$ 
+%and $-\gamma_{k}$ 
+in the above expression are zero.  For those $\alpha_{k}$ and $\beta_{k}$ that are strictly positive, we let $W_{k}$ and $Y_{k}$ 
+%and $Z^{*}_{k}$ 
+denote exponentially distributed random variables with rates $\alpha_{k}$ and $\beta_{k}$ respectively, and we denote by $X$ an exponentially distributed random variable with rate~$1/a$.  The equation above can then be written as:
+%\small
+%\begin{eqnarray*}
+%\lefteqn{
+%\mathrm{P}\left(S_{i}=s\right) = } \\
+%&&-\sum_{k=1}^{4}\alpha_{k}\,G^{-1}_{ik}G_{k4}\displaystyle\int_{0}^{\tau_{1}} \! g_{s}(t) \, e^{-\alpha_{k}t} \mathrm{d}t \\
+%&&- \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\,\sum_{k=1}^{4} \beta_{k}\, C_{jk}^{-1}C_{k4}\,\int_{0}^{\tau_{0}-\tau_{1}} \!g_{s}(\tau_{1}+t)\,e^{-\beta_{k}t}\mathrm{d}t\\
+%\\
+%&& + \frac{1}{a} \, \sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\int_{0}^{\infty} \!g_{s}(\tau_{0}+t)\, e^{-\frac{1}{a}t}  \mathrm{d}t \quad.\\
+%\end{eqnarray*}
+%\normalsize
+%Denoting by $W_{i}$, $Y_{j}$ and $Z_{l}$ the random variables with \textit{pdf}'s $f_{i}^{(1)}$, $f_{j}^{(2)}$ and $f_{l}^{(3)}%$ respectively, the above equation can be written as:
+\small
+\begin{eqnarray*}
+\lefteqn{ \mathrm{P}\left(S_{i}=s\right) } \\
+&=&-\displaystyle\sum_{k:\alpha_{k}>0}\,G^{-1}_{ik}G_{k4}\,\mathrm{E}[g_{s}(W_{k})|W_{k}\leq \tau_{1}]\,\mathrm{P}\!\left(W_{k}\leq \tau_{1}\right)  \\
+&&- \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1}) \displaystyle\sum_{k:\beta_{k}>0} C_{jk}^{-1}C_{k4}\,\mathrm{E}[g_{s}(\tau_{1}+Y_{k})|\tau_{1}+Y_{k}\leq \tau_{0}]\,\mathrm{P}\!\left(\tau_{1}+Y_{k}\leq \tau_{0}\right)\\
+&&+\displaystyle \sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\mathrm{E}[g_{s}(\tau_{0}+X)] \\
+\\
+&=&-\displaystyle\sum_{k:\alpha_{k}>0}\,G^{-1}_{ik}G_{k4}\left\lbrace\mathrm{E}[g_{s}(W_{k})]-\mathrm{E}[g_{s}(W_{k})|W_{k}> \tau_{1}]\mathrm{P}\!\left(W_{k}> \tau_{1}\right)\right\rbrace \\
+&&- \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0} C_{jk}^{-1}C_{k4}\left\lbrace\mathrm{E}[g_{s}(\tau_{1}+Y_{k})]
+-\mathrm{E}[g_{s}(\tau_{1}+Y_{k})|\tau_{1}+Y_{k}> \tau_{0}]\,\mathrm{P}\!\left(\tau_{1}+Y_{k}>\tau_{0}\right)\right\rbrace\\
+&&+\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\mathrm{E}[g_{s}(\tau_{0}+X)] \quad .
+\end{eqnarray*}
+\normalsize
+%\quad .
+%\end{eqnarray*}
+%\normalsize
+%
+%\small
+%\begin{eqnarray*}
+%%\begin{array}{lcl}
+%\mathrm{P}\left(S_{i}=s\right)&=&\mathrm{E}[g_{s}(W_{i})|W_{i}\leq \tau_{1}]\,\mathrm{P}\!\left(W_{i}\leq \tau_{1}\right) \\
+%\\
+%&&+ \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\,\mathrm{E}[g_{s}(\tau_{1}+Y_{j})|\tau_{1}+Y_{j}\leq \tau_{0}]\,
+%\mathrm{P}\!\left(\tau_{1}+Y_{j}\leq \tau_{0}\right)\\
+%\\
+%&&+  \displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,
+%\mathrm{E}[g_{s}(\tau_{0}+Z_{l})] \\
+%\\
+%&=&\mathrm{E}[g_{s}(W_{i})]-\mathrm{E}[g_{s}(W_{i})|W_{i}> \tau_{1}]\,\mathrm{P}\!\left(W_{i}> \tau_{1}\right) \\
+%\\
+%&&+\displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\,\left\lbrace\mathrm{E}[g_{s}(\tau_{1}+Y_{j})]-\mathrm{E}[g_{s}
+%(\tau_{1}+Y_{j})|\tau_{1}+Y_{j}> \tau_{0}]\,\mathrm{P}\!\left(\tau_{1}+Y_{j}>\tau_{0}\right)\right\rbrace\\
+%\\
+%&&+  \displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,
+%\mathrm{E}[g_{s}(\tau_{0}+Z_{l})] \quad.\\
+%\\
+%%\end{array}
+%\end{eqnarray*}
+%\normalsize
+%
+%
+%Recall that \small $f^{(1)}_{i}(t)= -\sum_{k=1}^{4} \alpha_{k}\,G_{ik}^{-1}G_{k4}\,e^{-\alpha_{k}t}$, $f^{(2)}_{j}(t)=-\sum_{k=1}^{4} \beta_{k}\, C_{jk}^{-1}C_{k4}\,e^{-\beta_{k}t}$ \normalsize and \linebreak \small $f^{(3)}_{l}(t)=\frac{1}{a} e^{-\frac{1}{a}t}
+%%\sum_{k=1}^{4}-\gamma_{k}\, D_{lk}^{-1}D_{k4}\,e^{-\gamma_{k}t}
+%$,  \normalsize and that some eigenvalues of \small $\mathbf{Q_{1}}$ and $\mathbf{Q_{2}}$ \normalsize 
+%%and \small $\mathbf{Q_{3}}$ \normalsize 
+%are equal to zero, i.e. some of the $\alpha_{k}$ and $\beta_{k}$ 
+%and $-\gamma_{k}$ 
+%are zero.  For those $\alpha_{k}$, $\beta_{k}$ and $\gamma_{k}$ that are strictly positive, we let $W^{*}_{k}$, $Y^{*}_{k}$ and $Z^{*}_{k}$ denote exponentially distributed random variables with rates $\alpha_{k}$, $\beta_{k}$ and $\gamma_{k}$ respectively.  The equation above can then be written as:
+%\small
+%\begin{equation*}
+%\begin{array}{lcl}
+%\mathrm{P}\left(S_{i}=s\right)&=&-\displaystyle\sum_{k:\alpha_{k}>0}\,G^{-1}_{ik}G_{k4}\left\lbrace\mathrm{E}[g_{s}(W^{*}%_{k})]-\mathrm{E}[g_{s}(W^{*}_{k})|W^{*}_{k}> \tau_{1}]\mathrm{P}\!\left(W^{*}_{k}> \tau_{1}\right)\right\rbrace \\
+%\\
+%&&- \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0} C_{jk}^{-1}C_{k4}\left\lbrace
+%\mathrm{E}[g_{s}(\tau_{1}+Y^{*}_{k})]
+%\right.\\
+%\\
+% &&\left.
+%-\mathrm{E}[g_{s}(\tau_{1}+Y^{*}_{k})|\tau_{1}+Y^{*}_{k}> \tau_{0}]\,\mathrm{P}\!\left(\tau_{1}+Y^{*}_{k}>\tau_{0}%%\right)\right\rbrace\\
+%\\
+%&&-\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,
+%\displaystyle\sum_{k:\gamma_{k}>0} D_{lk}^{-1}D_{k4}\,\mathrm{E}[g_{s}(\tau_{0}+Z^{*}_{k})] \quad.\\
+%\\
+%\end{array}
+%\end{equation*}
+%\begin{eqnarray*}
+%\lefteqn{
+%\mathrm{P}\left(S_{i}=s\right) = } \\
+%&&-\displaystyle\sum_{k:\alpha_{k}>0}\,G^{-1}_{ik}G_{k4}\left\lbrace\mathrm{E}[g_{s}(W^{*}_{k})]-\mathrm{E}[g_{s}
+%(W^{*}_{k})|W^{*}_{k}> \tau_{1}]\mathrm{P}\!\left(W^{*}_{k}> \tau_{1}\right)\right\rbrace \\
+%&&- \displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0} C_{jk}^{-1}C_{k4}\left\lbrace
+%\mathrm{E}[g_{s}(\tau_{1}+Y^{*}_{k})]
+%-\mathrm{E}[g_{s}(\tau_{1}+Y^{*}_{k})|\tau_{1}+Y^{*}_{k}> \tau_{0}]\,\mathrm{P}\!\left(\tau_{1}+Y^{*}_{k}>\tau_{0}
+%\right)\right\rbrace\\
+%&&-\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,
+%\displaystyle\sum_{k:\gamma_{k}>0} D_{lk}^{-1}D_{k4}\,\mathrm{E}[g_{s}(\tau_{0}+Z^{*}_{k})] \quad .
+%\end{eqnarray*}
+%\normalsize
+Finally, making use of the lack of memory property of the exponential distribution, we obtain:
+\small
+  \begin{equation}
+  \label{eq:likelihood_single}
+\begin{array}{lcl}
+\mathrm{P}(S_{i}=s)&=&-\displaystyle\sum_{k:\alpha_{k}>0}G^{-1}_{ik}G_{k4}\left\lbrace\mathrm{E}[g_{s}(W_{k})]-\mathrm{E}[g_{s}(\tau_{1}+W_{k})] \,e^{-\alpha_{k}\tau_{1}} \right\rbrace \\
+\\
+&&-\displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0}C_{jk}^{-1}C_{k4}\left\lbrace\mathrm{E}[g_{s}(\tau_{1}+Y_{k})]
+%\right.\\
+%\\
+%&&\left. 
+-\mathrm{E}[g_{s}(\tau_{0}+Y_{k})]\, e^{-\beta_{k}(\tau_{0}-\tau_{1})} \right\rbrace\\
+\\
+&&+\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\mathrm{E}[g_{s}(\tau_{0}+X)] \quad.
+\end{array}
+\end{equation} 
+\normalsize
+%\small
+%  \begin{equation}
+%  \label{eq:likelihood_single}
+%\begin{array}{lcl}
+%\mathrm{P}(S_{i}=s)&=&-\displaystyle\sum_{k:\alpha_{k}>0}G^{-1}_{ik}G_{k4}\left\lbrace\mathrm{E}[g_{s}(W^{*}_{k})]-\mathrm{E}[g_{s}(\tau_{1}+W^{*}_{k})] \,e^{-\alpha_{k}\tau_{1}} \right\rbrace \\
+%\\
+%&&-\displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0}C_{jk}^{-1}C_{k4}\left\lbrace\mathrm{E}[g_{s}(\tau_{1}+Y^{*}_{k})]
+%%\right.\\
+%%\\
+%%&&\left. 
+%-\mathrm{E}[g_{s}(\tau_{0}+Y^{*}_{k})]\, e^{-\beta_{k}(\tau_{0}-\tau_{1})} \right\rbrace\\
+%\\
+%&&-  \displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\,\displaystyle\sum_{k:\gamma_{k}>0} D_{lk}^{-1}D_{k4}\,\mathrm{E}[g_{s}(\tau_{0}+Z^{*}_{k})] \quad.
+%\end{array}
+%\end{equation} 
+%\normalsize
+%
+%To give an explicit statement of the expectations in this probability mass function, we use the results of equations (16) and (17) in %\citet{Herbots2012}: for a random variable $U$ following an exponential distribution with rate $\lambda$,
+%\small
+%\begin{equation}
+%\label{eq:int_1}
+%\begin{array}{ll}
+%\mathrm{E}[g_{s}(U)]&=\left(\frac{\theta}{\lambda+\theta}\right)^{s} \left(\frac{\lambda}{\lambda+\theta}\right)\quad
+%\end{array}
+%\end{equation} 
+%\normalsize
+%
+%\noindent
+%and 
+%\small
+%\begin{equation}
+%\label{eq:int_2}
+%\begin{array}{ll}
+%\mathrm{E}[g_{s}(\tau+U)]&=\left(\frac{\theta}{\lambda+\theta}\right)^{s} \left(\frac{\lambda}{\lambda+\theta}\right)\,e^{-
+%\theta \tau}\sum_{l=0}^{s}\frac{\left(\lambda+\theta\right)^{l}\tau^{l}}{l!} \quad.
+%\end{array}
+%\end{equation}
+%\normalsize
+Thus the probability that two DNA sequences 
+%from sampling locations 
+sampled from locations given by initial state $i \in \{1,2,3\}$ differ at $s$ nucleotide sites
+%or: the probability of $s$ nucleotide differences between two DNA sequences sampled from initial state $i \in \{1,2,3\}$
+%or: the probability of $s$ nucleotide differences between two DNA sequences sampled from locations given by initial state $i \in \{1,2,3\}$
+(and similarly, the expectation of any other function of the coalescence time $T_{i}$) 
+can be obtained from results for Exponential and shifted Exponential random variables.
+In particular, for an exponentially distributed random variable $U$ with rate parameter $\lambda$, $\mathrm{E}[g_{s}(U)] =\mathrm{E}\left[\frac{(\theta U)^{s}}{s!}\,e^{-\theta U}\right]$ is the probability that $s$ events occur in a Poisson Process of rate $\theta$
+during a time span of length $U$; this can be written as a probability from a geometric distribution:
+% ($s$ `failures' before the first `success', where the `success' probability is $\frac{\lambda}{\lambda+\theta}$):
+\begin{equation}
+\label{eq:int_1}
+%\begin{array}{ll}
+\mathrm{E}[g_{s}(U)]=\left(\frac{\theta}{\lambda+\theta}\right)^{\!s} \frac{\lambda}{\lambda+\theta}~~~~~~\mbox{for } s=0,1,2, \ldots
+%\end{array}
+\end{equation} 
+\citep{Watterson1975}.
+%this is also the probability that two DNA sequences sampled at random from a panmictic population of size $2N/\lambda$ sequences differ at $s$ nucleotide sites, given by Watterson~(1975):
+%\begin{equation}
+%E[g_k(X)] = \frac{(c_i \theta)^k}{(1 + c_i \theta)^{k+1}}. 
+%\label{Watterson}
+%\end{equation}
+Similarly, for any $\tau>0$, $\mathrm{E}[g_{s}(\tau+U)]$ is the probability that $s$ events occur  in a Poisson Process of rate 
+$\theta$ during a time span of length $\tau + U$, which is given by
+%; this is equal to the probability of $s$ nucleotide differences between two DNA sequences sampled from different descendant 
+%populations in a ``complete isolation model" where, time~$\tau$ ago, a panmictic ancestral population of size $2N/\lambda$ genes 
+%split into two completely isolated populations, and is given by
+%\begin{equation}
+%\label{eq:int_2}
+%%\begin{array}{ll}
+%\mathrm{E}[g_{s}(\tau+U)]=e^{-\theta \tau}\left(\frac{\theta}{\lambda+\theta}\right)^{\!s} \frac{\lambda}{\lambda+\theta}\,\,\sum_{l=0}^{s}\frac{\left(\lambda+\theta\right)^{l}\tau^{l}}{l!}~~~~~~\mbox{for } s=0,1,2, \ldots
+%% \quad.
+%%\end{array}
+%\end{equation}
+\begin{equation}
+\label{eq:int_2}
+%\begin{array}{ll}
+\mathrm{E}[g_{s}(\tau+U)]=e^{-\theta \tau}\frac{\lambda\,\theta^s}{(\lambda+\theta)^{s+1}}\,\sum_{l=0}^{s}\frac{\left(\lambda+\theta\right)^{l}\tau^{l}}{l!}~~~~~~\mbox{for } s=0,1,2, \ldots
+% \quad.
+%\end{array}
+\end{equation}
+%\begin{equation}
+%E[g_k(\tau_0 + Y)]
+% = \frac{e^{-\theta \tau_0} (a \theta)^k}{(1 + a \theta)^{k+1}} 
+%\sum_{l=0}^{k} \frac{ \left( \frac{1}{a} + \theta \right)^l \tau_0^l }{l!}
+%\label{S12_isolation}
+%\end{equation}
+(\citealp{Takahata1995}; see also \citealp{Herbots2008}).
+Substituting~(\ref{eq:int_1}) and~(\ref{eq:int_2}) into equation~(\ref{eq:likelihood_single}) then gives the following result for the probability distribution of $S_i$, the number of nucleotide differences between two DNA sequences sampled from locations given by initial state~$i \in \{1,2,3\}$:
+
+%or: then gives the following result for the probability that two DNA sequences sampled from locations given by initial state~$i \in \{1,2,3\}$ differ at $s$ nucleotide sites:
+%\small
+%\begin{eqnarray}
+%\label{eq:likelihood_single_2}
+%%\begin{array}{lcl}
+%\mathrm{P}(S_{i}=s)
+%&=&-\displaystyle\sum_{k:\alpha_{k}>0}G^{-1}_{ik}G_{k4}\,\frac{\alpha_k\,\theta^s}{(\alpha_k+\theta)^{s+1}}\,\left( 1 - e^{-(\alpha_k+\theta) \tau_1}\,\sum_{l=0}^{s}\frac{\left(\alpha_k+\theta\right)^{l}{\tau_1}^{l}}{l!} \right) \nonumber \\
+%%\\
+%&&-\displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0}C_{jk}^{-1}C_{k4}\, \frac{\beta_k\,\theta^s}{(\beta_k+\theta)^{s+1}}\,\left( e^{-\theta \tau_1}\,\sum_{l=0}^{s}\frac{\left(\beta_k+\theta\right)^{l}{\tau_1}^{l}}{l!}
+%\right.\nonumber\\
+%%\\
+%&&\left. 
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-e^{-(\beta_k+\theta) \tau_0+\beta_{k}\tau_{1}}\,\sum_{l=0}^{s}\frac{\left(\beta_k+\theta\right)^{l}\tau_0^{l}}{l!} \right)
+%\nonumber\\
+%%\\
+%&&+\left(\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\right)\,e^{-\theta \tau_0}\frac{(a\theta)^s}{(1+a\theta)^{s+1}}\,\sum_{l=0}^{s}\frac{\left(\frac{1}{a}+\theta\right)^{l}\tau_0^{l}}{l!}
+%\nonumber\\
+%%\end{array}
+%\end{eqnarray} 
+%\normalsize
+%for $s=0,1,2,\ldots$ Recalling also that \small $p^{(1)}_{ij}(\tau_1)=\sum_{k=1}^{4} G_{ik}^{-1}G_{kj}\,e^{-\alpha_{k}\tau_1}$ \normalsize and \small $p^{(2)}_{jl}(\tau_0-\tau_1)=\sum_{k=1}^{4} C_{jk}^{-1}C_{kl}\,e^{-\beta_{k}(\tau_0-\tau_1)}$,  \normalsize the %above probability can easily be computed 
+%%easily and efficiently 
+%for any parameter values, 
+%%$(a,b,c_1,c_2,\tau_0,\tau_1,M_1,M_2,{M_1}^\prime,{M_2}^\prime,\theta)$.
+%using standard numerical procedures to compute the eigenvalues and eigenvectors of the matrices $\mathbf{Q_{1}}$ and $\mathbf{Q_{2}}$, 
+%%(except for a negligible subset of the parameter space in the case of unidirectional gene flow, as mentioned in Subsection~2.1).
+%except for a negligible subset of parameter values 
+%%the parameter space 
+%for which the matrices  $\mathbf{Q_{1}}$ and/or $\mathbf{Q_{2}}$ are not diagonalisable (see Subsection~2.1).
+%% if row/col 2 and 3 were swapped round as in previous version (i.e. with state 2 corresponding to the 3rd row and column in all matrices and vice versa), then $i$ in $T_i$ and $S_i$ in LHS of eqns would not correspond to $i$ in RHS of equations, e.g. in eqns (6) to (11)
+\small
+\begin{eqnarray}
+\label{eq:likelihood_single_2}
+%\begin{array}{lcl}
+\mathrm{P}(S_{i}=s)
+&=&-\displaystyle\sum_{k:\alpha_{k}>0}G^{-1}_{ik}G_{k4}\,\frac{\alpha_k\,\theta^s}{(\alpha_k+\theta)^{s+1}}\,\left( 1 - e^{-(\alpha_k+\theta) \tau_1}\,\sum_{l=0}^{s}\frac{\left(\alpha_k+\theta\right)^{l}{\tau_1}^{l}}{l!} \right) \nonumber \\
+%\\
+&&-\displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0}C_{jk}^{-1}C_{k4}\, \frac{\beta_k\,\theta^s}{(\beta_k+\theta)^{s+1}}\,\left( e^{-\theta \tau_1}\,\sum_{l=0}^{s}\frac{\left(\beta_k+\theta\right)^{l}{\tau_1}^{l}}{l!}
+\right.\nonumber\\
+%\\
+&&\left. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-e^{-(\beta_k+\theta) \tau_0+\beta_{k}\tau_{1}}\,\sum_{l=0}^{s}\frac{\left(\beta_k+\theta\right)^{l}\tau_0^{l}}{l!} \right)
+\nonumber\\
+%\\
+&&+\left(\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})\right)\,e^{-\theta \tau_0}\frac{(a\theta)^s}{(1+a\theta)^{s+1}}\,\sum_{l=0}^{s}\frac{\left(\frac{1}{a}+\theta\right)^{l}\tau_0^{l}}{l!}
+\nonumber\\
+%\end{array}
+\end{eqnarray} 
+\normalsize
+%for $s=0,1,2,\ldots$ Noting that $\displaystyle\sum_{j=1}^{3} p^{(1)}_{ij}(\tau_{1})\displaystyle\sum_{l=1}^{3}p^{(2)}_{jl}(\tau_{0}-\tau_{1})$
+%%=1-\displaystyle\sum_{j=1}^{4} p^{(1)}_{ij}(\tau_{1})p^{(2)}_{j4}(\tau_{0}-\tau_{1})$ as this 
+%is the probability that, 
+%%starting from state~$i$, the process does not reach state~4 (coalescence) by time $\tau_0$.  
+%having started from state~$i$, the process has not yet reached state~4 (coalescence) by time $\tau_0$, the above expression can be simplified slightly:  
+%\small
+%\begin{eqnarray}
+%\label{eq:likelihood_single_3}
+%%\begin{array}{lcl}
+%\mathrm{P}(S_{i}=s)
+%&=&-\displaystyle\sum_{k:\alpha_{k}>0}G^{-1}_{ik}G_{k4}\,\frac{\alpha_k\,\theta^s}{(\alpha_k+\theta)^{s+1}}\,\left( 1 - e^{-(\alpha_k+\theta) \tau_1}\,\sum_{l=0}^{s}\frac{\left(\alpha_k+\theta\right)^{l}{\tau_1}^{l}}{l!} \right) \nonumber \\
+%%\\
+%&&-\displaystyle \sum_{j=1}^{3}\,p^{(1)}_{ij}(\tau_{1})\, \displaystyle\sum_{k:\beta_{k}>0}C_{jk}^{-1}C_{k4}\, \frac{\beta_k\,\theta^s}{(\beta_k+\theta)^{s+1}}\,\left( e^{-\theta \tau_1}\,\sum_{l=0}^{s}\frac{\left(\beta_k+\theta\right)^{l}{\tau_1}^{l}}{l!}
+%\right.\nonumber\\
+%%\\
+%&&\left. 
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-e^{-(\beta_k+\theta) \tau_0+\beta_{k}\tau_{1}}\,\sum_{l=0}^{s}\frac{\left(\beta_k+\theta\right)^{l}\tau_0^{l}}{l!} \right)
+%\nonumber\\
+%%\\
+%&&+\left(1-\displaystyle\sum_{j=1}^{4} p^{(1)}_{ij}(\tau_{1})p^{(2)}_{j4}(\tau_{0}-\tau_{1})\right)\,e^{-\theta \tau_0}\frac{(a\theta)^s}{(1+a\theta)^{s+1}}\,\sum_{l=0}^{s}\frac{\left(\frac{1}{a}+\theta\right)^{l}\tau_0^{l}}{l!}
+%\nonumber\\
+%%\end{array}
+%\end{eqnarray} 
+%\normalsize
+for $s=0,1,2,\ldots$ Recalling also that $p^{(1)}_{ij}(\tau_1)=\sum_{k=1}^{4} G_{ik}^{-1}G_{kj}\,e^{-\alpha_{k}\tau_1}$  and \\ $p^{(2)}_{jl}(\tau_0-\tau_1)=\sum_{k=1}^{4} C_{jk}^{-1}C_{kl}\,e^{-\beta_{k}(\tau_0-\tau_1)}$, the above probability can easily be computed 
+%easily and efficiently 
+for any parameter values, 
+%$(a,b,c_1,c_2,\tau_0,\tau_1,M_1,M_2,{M_1}^\prime,{M_2}^\prime,\theta)$.
+using standard numerical procedures to compute the eigenvalues and eigenvectors of the matrices $\mathbf{Q_{1}}$ and $\mathbf{Q_{2}}$, 
+%(except for a negligible subset of the parameter space in the case of unidirectional gene flow, as mentioned in Subsection~2.1).
+except for a negligible subset of parameter values 
+%the parameter space 
+for which the matrices  $\mathbf{Q_{1}}$ and/or $\mathbf{Q_{2}}$ are not diagonalisable (see Subsection~2.1).
+% if states 2 and 3 were defined as originally (i.e. with state 2 corresponding to the 3rd row and column in all matrices and vice versa), then $i$ in $T_i$ and $S_i$ in LHS of eqns would not correspond to $i$ in RHS of equations, e.g. in eqns (6) to (11)
+
+If $M'_1=M'_2=0$, then equation~(\ref{eq:likelihood_single_2}) reduces to the corresponding results for the `isolation with initial migration' (IIM) model, given by equations~(11) and~(12) in \citet{Costa2017}. If, in addition, $M_1=M_2$ and $b=1$ (an IIM model with symmetric migration and equal population sizes during the migration period), then explicit expressions are available for the eigenvalues of the matrix $\mathbf{Q_{2}}$, and equation~(\ref{eq:likelihood_single_2}) simplifies to the fully explicit expressions given in \citet{Herbots2012}, equations~(18) and~(29).
+
+
+
+\subsection{The likelihood of a multilocus data set}
+Recall that, for the purposes of this paper, an observation consists of the number of nucleotide differences between two DNA sequences at a given locus. To jointly estimate all the parameters of the GIM model,  
+% fit the GIM model, we need one such observation from each of a large number of loci, and this data set should include 
+our method requires a large 
+%number 
+set of observations, all at different loci, from each of the three possible initial states: both sequences sampled from descendant population~1
+%species 1 
+(state 1), both sequences sampled from 
+%species 2 
+descendant population~2 (state 2), or one sequence sampled from each of the two descendant populations 
+%each species 
+(state 3). 
+To compute the likelihood of such a data set, we will assume that all observations are independent, so our data should include no more than one observation (i.e. pair of sequences) per locus and there should be free recombination between loci, i.e. all loci should be sufficiently far apart. 
+%assume that there is free recombination between loci, so that observations at different loci are independent.
+
+%Let $\boldsymbol{\rho}$ be the vector of parameters of the coalescent under the GIM model, i.e. 
+%\small
+%\begin{equation*}
+%%\boldsymbol{\rho}=[a \quad b \quad c_{1} \quad c_{2} \quad\tau_{1} \quad \tau_{0} \quad M_{1} \quad M_{2} \quad M'_{1} 
+%%\quad M'_{2}] \quad.
+%\boldsymbol{\rho}=(a, b, c_{1}, c_{2}, \tau_{1}, \tau_{0}, M_{1},  M_{2},  M'_{1},  M'_{2}) \quad.
+%\end{equation*}
+%\normalsize
+%Assign to each locus for initial state $i \in \{1,2,3\}$ a label $j_i \in \{1_i,2_i,3_i,\ldots,J_i\}$, where $J_i$ is the total number of loci
+% associated with initial state~$i$. Denote by $\theta_{j_i}=4N\mu_{j_i}$ the scaled mutation rate at locus $j_i$, where $\mu_{j_i}$ is the mutation rate per sequence per generation at that locus. Let $\theta$ now denote the \textit{average} scaled mutation rate over all loci in the data set, and denote by $r_{j_i}=\frac{\theta_{j_i}}{\theta}$ the \textit{relative} mutation rate of locus $j_i$, so that $\theta_{j_i}=r_{j_i}\theta$. If the relative mutation rates are known, 
+%%Let $\boldsymbol{\rho}$ be the vector of parameters of the coalescent under the GIM model, i.e. 
+%%\small
+%%\begin{equation*}
+%%%\boldsymbol{\rho}=[a \quad b \quad c_{1} \quad c_{2} \quad\tau_{1} \quad \tau_{0} \quad M_{1} \quad M_{2} \quad M'_{1} 
+%%%\quad M'_{2}] \quad.
+%%\boldsymbol{\rho}=(a, b, c_{1}, c_{2}, \tau_{1}, \tau_{0}, M_{1},  M_{2},  M'_{1},  M'_{2}) \quad.
+%%\end{equation*}
+%%\normalsize
+%Furthermore, let $\theta$ now denote the average mutation rate over all loci in the data set, and let the mutation rate at a given locus $l$ be represented by $\theta_{l}$. The parameter $\theta_{l}$ can be written as $\theta_{l}=r_{l}\theta$, where $r_{l}=\frac{\theta_{l}}{\theta}$ is the \textit{relative} mutation rate of locus $l$. If the $r_{l}$ are known, 
+%the likelihood of the data
+%%of a set of observations from  independent loci 
+%can be written as
+%%\small
+%\begin{equation*}
+%\label{eq:estimated likelihood}
+%\displaystyle 
+%L\left(\boldsymbol{\rho},\theta;\mathbf{s}\right)=\prod_{i=1}^3 \prod_{j_i=1_i}^{J_i} L(\boldsymbol{\rho},\theta;s_{j_i})
+%%L\left(\boldsymbol{\rho},\theta;\mathbf{s},\mathbf{r}\right)=\prod_{l} L(\boldsymbol{\rho},\theta;s_{l},r_{l})
+%%L\left(\boldsymbol{\rho},\theta;\mathbf{x},\mathbf{r}\right)=\prod_{l} L(\boldsymbol{\rho},\theta;x_{l},r_{l})
+%\end{equation*}
+%%\normalsize
+%where $L(\boldsymbol{\rho},\theta;s_{j_i})$, 
+%%$L(\boldsymbol{\rho},\theta;s_{l},r_{l})$, 
+%%$L(\boldsymbol{\rho},\theta;x_{l},r_{l})$
+%the likelihood of the observation $s_{j_i}$ from locus $j_i$, is the probability that the two DNA sequences sampled at locus $j_i$ differ at $s_{j_i}$ nucleotide sites and is given by 
+%%has the same form as 
+%equation (\ref{eq:likelihood_single_2}) with  $\theta$ replaced by $\theta_{j_i}=r_{j_i}\theta$.
+%% in equations (\ref{eq:int_1}) and (\ref{eq:int_2}).
+%OR:\\
+%Let $\boldsymbol{\rho}$ be the vector of parameters of the coalescent under the GIM model, i.e. 
+%\small
+%\begin{equation*}
+%\boldsymbol{\rho}=(a, b, c_{1}, c_{2}, \tau_{1}, \tau_{0}, M_{1},  M_{2},  M'_{1},  M'_{2}) \quad.
+%\end{equation*}
+%\normalsize
+%Denote by $J_i$ 
+%the number of loci at which the observation available is from initial state~$i$.
+%We will use the subscript $(i,j)$ to refer to the $j$th locus associated with initial state~$i$,
+%for $i \in \{1,2,3\}$ and $j \in \{1,\ldots,J_i\}$.
+%Denote by $\theta_{(i,j)}=4N\mu_{(i,j)}$ the scaled mutation rate of locus $(i,j)$, where $\mu_{(i,j)}$ is the mutation rate per sequence per generation at that locus. Let $\theta$ now denote the \textit{average} scaled mutation rate over all loci in the data set, and denote by $r_{(i,j)}=\frac{\theta_{(i,j)}}{\theta}$ the \textit{relative} mutation rate of locus $(i,j)$, so that $\theta_{(i,j)}=r_{(i,j)}\theta$. If the relative mutation rates are known, 
+%the likelihood of the data can be written as
+%\begin{equation*}
+%\label{eq:estimated likelihood}
+%\displaystyle 
+%L\left(\boldsymbol{\rho},\theta;\mathbf{s}\right)=\prod_{i=1}^3 \prod_{j=1}^{J_i} L(\boldsymbol{\rho},\theta;s_{(i,j)})
+%\end{equation*}
+%where $L(\boldsymbol{\rho},\theta;s_{(i,j)})$, 
+%the likelihood of the observation $s_{(i,j)}$, is the probability that the two DNA sequences sampled at locus $(i,j)$ differ at $s_{(i,j)}$ nucleotide sites and is given by 
+%equation (\ref{eq:likelihood_single_2}) with  $\theta$ replaced by $\theta_{(i,j)}=r_{(i,j)}\theta$.
+%OR: \\
+%Let $\boldsymbol{\rho}$ be the vector of parameters of the coalescent under the GIM model, i.e. 
+%\small
+%\begin{equation*}
+%\boldsymbol{\rho}=(a, b, c_{1}, c_{2}, \tau_{1}, \tau_{0}, M_{1},  M_{2},  M'_{1},  M'_{2}) \quad.
+%\end{equation*}
+%\normalsize
+%Denote by $J_i$ the number of loci at which the observation available is from initial state~$i$.
+%\\or:\\ Denote by $J_i$ the number of loci at which the observation available was sampled from locations corresponding to initial state~$i$.\\
+%We will use the label $i_j$ to refer to the $j$th locus associated with initial state~$i$,
+%for $i \in \{1,2,3\}$ and $j \in \{1,\ldots,J_i\}$.
+%Denote by $\theta_{i_j}=4N\mu_{i_j}$ the scaled mutation rate of locus $i_j$, where $\mu_{i_j}$ is the mutation rate per sequence per generation at that locus. Let $\theta$ now denote the \textit{average} scaled mutation rate over all loci in the data set, and denote by $r_{i_j}=\frac{\theta_{i_j}}{\theta}$
+%the \textit{relative} mutation rate of locus $i_j$, so that $\theta_{i_j}=r_{i_j}\theta$. If the relative mutation rates are known, 
+%the likelihood of the data
+%can be written as
+%\begin{equation*}
+%\label{eq:estimated likelihood}
+%\displaystyle 
+%L\left(\boldsymbol{\rho},\theta;\mathbf{s}\right)=\prod_{i=1}^3 \prod_{j=1}^{J_i} L(\boldsymbol{\rho},\theta;s_{i_j})
+%\end{equation*}
+%where $L(\boldsymbol{\rho},\theta;s_{i_j})$, 
+%the likelihood of the observation $s_{i_j}$, is the probability that the two DNA sequences sampled at locus $i_j$ differ at $s_{i_j}$ nucleotide sites and is given by 
+%equation (\ref{eq:likelihood_single_2}) with  $\theta$ replaced by $\theta_{i_j}=r_{i_j}\theta$, and $s$ replaced by $s_{i_j}$ (or ${s_i}_j$?).
+%OR: \\
+Let $\boldsymbol{\rho}$ be the vector of parameters of the coalescent under the GIM model, i.e. 
+%\small
+\begin{equation*}
+\boldsymbol{\rho}=(a, b, c_{1}, c_{2}, \tau_{1}, \tau_{0}, M_{1},  M_{2},  M'_{1},  M'_{2}) \quad.
+\end{equation*}
+%\normalsize
+Denote by $J_i$ the number of loci at which the two sampled DNA sequences are from locations corresponding to initial state~$i$ ($i=1,2,3$).
+%or: at which the observation made is from initial state~$i$ ($i=1,2,3$).
+We redefine $\theta$ to denote the \textit{average} scaled mutation rate over all loci in the combined data set made up of the observations from
+%associated with 
+all three initial states. For $i=1,2,3$ and $j=1,\ldots,J_i$,
+denote by $\theta_{ij}=4N\mu_{ij}$ the scaled mutation rate of the $j$th locus associated with initial state~$i$, where $\mu_{ij}$ is the mutation rate per sequence per generation at that locus, and denote by $r_{ij}=\frac{\theta_{ij}}{\theta}$
+the \textit{relative} mutation rate of that locus, so that $\theta_{ij}=r_{ij}\theta$. 
+%If the relative mutation rates are known, 
+%the likelihood of the data set $\boldsymbol{s}=(s_{ij})_{i=1,2,3; j=1,\ldots,J_i}$ can be written as
+%\begin{equation*}
+%\label{eq:estimated likelihood}
+%\displaystyle 
+%L\left(\boldsymbol{\rho},\theta;\mathbf{s}\right)=\prod_{i=1}^3 \prod_{j=1}^{J_i} L(\boldsymbol{\rho},\theta;s_{ij})
+%\end{equation*}
+%where $L(\boldsymbol{\rho},\theta;s_{ij})$, 
+%the likelihood of the observation $s_{ij}$ at the $j$th locus associated with initial state~$i$, is the probability that the two DNA sequences sampled at that locus differ at $s_{ij}$ nucleotide sites and is given by 
+%equation (\ref{eq:likelihood_single_2}) with  $\theta$ replaced by $\theta_{ij}=r_{ij}\theta$, and $s$ replaced by $s_{ij}$.
+Assuming that the relative mutation rates are known, and denoting by $s_{ij}$ the observation at the $j$th locus associated with initial state~$i$ (i.e. the number of nucleotide differences between the two DNA sequences sampled at that locus), the likelihood of the data set $\boldsymbol{s}=(s_{ij})_{i=1,2,3; j=1,\ldots,J_i}$ can be written as
+%\small
+\begin{equation*}
+\label{eq:estimated likelihood}
+\displaystyle 
+L\left(\boldsymbol{\rho},\theta;\mathbf{s}\right)=\prod_{i=1}^3 \prod_{j=1}^{J_i} L(\boldsymbol{\rho},\theta;s_{ij})
+\end{equation*}
+%\normalsize
+where $L(\boldsymbol{\rho},\theta;s_{ij})$, 
+the likelihood of the observation $s_{ij}$, is the probability that the two DNA sequences sampled at the $j$th locus associated with initial state~$i$ differ at $s_{ij}$ nucleotide sites and is given by 
+equation (\ref{eq:likelihood_single_2}) with  $\theta$ replaced by $\theta_{ij}=r_{ij}\theta$, and $s$ replaced by $s_{ij}$.
+%OR: see Rui's thesis and my TPB paper: write as one product but introduce sampling locations (i.e. initial state)
+
+In our maximum-likelihood method, the relative mutation rates $r_{ij}$ are treated as known constants. In practice, however,
+the relative mutation rates at the different loci are usually estimated using outgroup sequences
+%the relative mutation rates need to be estimated, and the estimates plugged into equation~(\ref{eq:estimated likelihood}) for the llikelihood. Estimates of the relative mutation rates of the different loci can be obtained using outgroup sequences 
+\citep[for example,][]{Yang2002, Wang2010, Lohse2011, Costa2017}. 
+It should be noted that standard errors and confidence intervals obtained with our method do not account for uncertainty about the relative mutation rates.
+%must be estimated and substituted into the likelihood before any inference can be carried out. Estimates of $r_{l}$ can be computed by means of the following estimator suggested by \cite{Yang2002}, in which $L$ is the total number of loci, and $\bar{d}_{l}$ is the average, at locus $l$, of the ingroup-outgroup pairwise distance estimates (i.e the average is over all the distance estimates that can be computed at locus $l$ using  pairs of sequences that are composed of one ingroup sequence and one outgroup sequence):
+%\small
+%\begin{equation*}
+%\hat{r}_{l}=\frac{L\hspace{0.1cm}\bar{d}_{l}}{\sum^{L}_{m=1}\bar{d}_{m}}\qquad.
+%\end{equation*}
+%\normalsize
+
+\begin{figure}[!b]
+%\hspace*{3.15cm}
+\hspace*{3.25cm}
+\includegraphics[width=0.8\textwidth]{Figure_GIM_reparameterised_v3.pdf}
+\vspace*{-2.9cm}
+\caption{The reparameterised GIM model. The direction of migration shown is from a forward-in-time perspective.}
+% \hspace*{1cm}}
+\label{GIM_reparameterised}
+\end{figure}
+
+%To increase the robustness and performance of the likelihood maximisation procedure, our implementation in R finds the maximum-likelihood estimates of a reparameterised model with parameters $\theta$, $\theta_{a}=\theta a$, $\theta_{b}=\theta b$, $\theta_{c_{1}}=\theta c_{1}$, $\theta_{c_{2}}=\theta c_{2}$, $V=\theta \left(\tau_{0}-\tau_{1} \right)$, $T_{1}=\theta \tau_{1}$ , $M_{1}$, $M_{2}$,  $M'_{1}$, $M'_{2}$ (this is similar to reparameterisations used by other authors, for example \citep{Wang2010}).
+To increase the robustness and performance of the likelihood maximisation procedure, our computer implementation uses the following reparameterisations:
+% (in addition to the parameter $\theta$):
+\begin{equation}
+\begin{array}{l}
+%\theta_a = a \theta,\,\,
+%%\theta_b = b \theta,\,\,
+%% or:
+%\theta_{b_1} = \theta, \,\,
+%\theta_{b_2} = b \theta, \,\,
+%\theta_{c_1} = c_1 \theta, \,\,
+%\theta_{c_2} = c_2 \theta, \\
+\theta_0 = a \theta,\,\,
+\theta_1 = \theta,\,\,
+\theta_2 = b \theta,\,\,
+\theta'_1 = c_1 \theta, \,\,
+\theta'_2 = c_2 \theta, \\
+%
+T_1 = \theta \tau_1,\,\,  
+V  = \theta (\tau_0 - \tau_1),\\
+{M_1}^{\!*} = M_1,\,\,
+{M_2}^{\!*} = b M_2,\,\,
+{M'_1}^{*} = c_1 M'_1,\,\,
+{M'_2}^{*} = c_2 M'_2
+%\\or:
+% M_{b_1} = M_1,\,\,
+% M_{b_2} = b M_2,\,\,
+% M_{c_1} = c_1 M'_1,\,\,
+% M_{c_2} = c_2 M'_2
+\end{array}
+\label{pars}
+\end{equation}
+(similar to the choice of parameters in, for example, \citealp{Hey2004,Zhu2012,Costa2017}); see also Figure~\ref{GIM_reparameterised}.
+%Yang2002
+With this reparameterisation, $\theta_0$\,, $\theta_1$\,, $\theta_2$\,, $\theta'_1$ and $\theta'_2$ 
+%$\theta_a$\,, $\theta_{b_1}$\,, $\theta_{b_2}$\,, $\theta_{c_1}$ and $\theta_{c_2}$ 
+% $\theta_a$, $\theta$, $\theta_b$, $\theta_{c_1}$ and $\theta_{c_2}$
+are the `population size parameters' of, respectively, the ancestral population, descendant populations~1 and~2 between times $\tau_0$ and $\tau_1$ ago, and descendant populations~1 and~2 between time $\tau_1$ ago and the present.
+%note that in each case, 
+Note that for each population,
+$\theta_i=4 N_i \mu$, where $2N_i$ is the size (the number of DNA sequences at any locus) of the population concerned and $\mu$ is the mutation rate per sequence per generation averaged over all the loci in the data set; similarly for $\theta'_i$. The `time' parameters $T_1$ and $V$ represent, respectively, the durations of the most recent stage of the model (i.e. from time $\tau_1$ ago until the present) and the intermediate stage of the model (between times $\tau_0$ and $\tau_1$ ago), but these durations are now measured by twice the expected number of mutations per DNA sequence during the period concerned.
+%represent, respectively, the durations of the most recent and the intermediate stages of the model, measured by twice the expected number of mutations per DNA sequence during the period concerned. 
+For $i=1,2$, the migration parameter ${M_i}^{\!*}$ is, from a forward in time perspective, twice the number of immigrant DNA sequences into descendant population~$i$ per generation between times $\tau_0$ and $\tau_1$ ago (equivalently, if we work backward in time, it is  twice the number of DNA sequences that migrate from population~$i$ per generation  between times $\tau_1$ and $\tau_0$ ago).
+%For $i=1,2$, the migration parameter ${M_i}^{\!*}$ is twice the number of immigrant DNA sequences into descendant population~$i$ (or equivalently, twice the number of DNA sequences that migrate from population~$i$ if we work backward in time) per generation between times $\tau_0$ and $\tau_1$ ago.
+%For $i=1,2$, the migration parameter ${M_i}^{\!*}$ is twice the number of immigrant DNA sequences into descendant population~$i$ per generation between times $\tau_0$ and $\tau_1$ ago (from a forward in time perspective; equivalently, if we work backward in time, it is  twice the number of DNA sequences that leave population~$i$ each generation between times $\tau_1$ and $\tau_0$ ago).\\
+Similarly, ${M'_i}^{*}$ is twice the number of immigrant DNA sequences into descendant population~$i$ per generation between time $\tau_1$ ago and the present (or, from a backward in time perspective, twice the number of emigrant DNA sequences from descendant population~$i$ per generation during this period).
+%The interpretation of the migration parameters  ${M'_i}^{*}$ ($i=1,2$) is analogous, but for the period from time~$\tau_1$ ago until the present.
+%For data consisting of the number of nucleotide differences between pairs of DNA sequences from a large number of independent loci for each of the three possible initial states (two DNA sequences from descendant population~1, two sequences from descendant population~2, or one sequence from each population),
+Our computer code for fitting the full GIM model to the data obtains ML estimates jointly for the 11 parameters
+$\theta_0\,,\,\, \theta_1\,,\,\, \theta_2\,,\,\, \theta'_1\,,\,\, \theta'_2\,,\,\, T_1\,,\,\, V,\,\, {M_1}^{\!*},\,\, {M_2}^{\!*},\,\, {M'_1}^{*},\,\, {M'_2}^{*}.$
+%$\theta_a\,,\,\, \theta_{b_1}\,,\,\, \theta_{b_2}\,,\,\, \theta_{c_1}\,,\,\, \theta_{c_2}\,,\,\, T_1\,,\,\, V,\,\, {M_1}^{\!*},\,\, {M_2}^{\!*},\,\, {M'_1}^{*},\,\, {M'_2}^{*}.$
+%$\theta_a,\,\, \theta,\,\, \theta_b,\,\, \theta_{c_1},\,\, \theta_{c_2},\,\, T_1,\,\, V,\,\, {M_1}^{\!*},\,\, {M_2}^{\!*},\,\, {M'_1}^{*},\,\, {M'_2}^{*}.$
+% ? say something about standard errors? But code to compute s.e. only works if all estimates are non-zero. [ADD S.E. COMPUTATION TO CODE]
+These estimates can readily be converted to ML estimates of the original model parameters if required. 
+
+Our computer implementation also allows the three simpler models illustrated in Figure~\ref{models} to be fitted to the data, using the same reparameterisation as above:
+(a) a model of complete isolation that allows for a change of the descendant population sizes (${M_1}^{\!*}={M_2}^{\!*}={M'_1}^{*}={M'_2}^{*}=0$, leaving 7 parameters to be estimated);
+(b) the `isolation with initial migration' model (${M'_1}^{*}={M'_2}^{*}=0$, leaving 9 parameters to be estimated; see also \citealp{Costa2017}); 
+and (c) a model of secondary contact  (${M_1}^{\!*}={M_2}^{\!*}=0$, again leaving 9 parameters to be estimated). 
+For each of these models, the computation of the likelihood uses an appropriately simplified version of equation~(\ref{eq:likelihood_single_2}).
+%, as detailed in Appendix~A. 
+Versions of the GIM model involving unidirectional gene flow during the most recent and/or the intermediate stage of the model can also readily be implemented,
+% or: have also been implemented (?)
+but 
+% , to avoid repetion,
+% , for the sake of brevity,
+are not further considered in this paper.
+
+\subsection{Model comparison}
+% or: Model selection
+\label{subsection: model comparison}
+
+For any particular data set, a straightforward way
+%to compare the fit of the different models considered in this paper
+to compare the fit of the GIM model and that of simpler models nested within it
+is by 
+using Akaike's Information Criterion, AIC, which was designed to compare
+competing models with different numbers of parameters.
+%(AIC scores were also used in, for example, Takahata et al.~1995, Nielsen and Wakeley~2001, and Carstens et al.~2009). 
+For each model,
+% (and for the same data), AIC is defined as
+$$
+\mbox{AIC} = -2 \ln\hat{L} +2k
+%+ 2 \times \mbox{\em{number of independently adjusted parameters within the model}}
+$$
+\citep{Akaike1972, Akaike1974}, where $\hat{L}$ is the maximised likelihood of the model, given the data, and $k$ is the number of free parameters in the model.
+Thus a larger maximised likelihood leads to a lower AIC value, 
+subject to a penalty for each additional model parameter.
+%The ``Minimum AIC Estimate" (MAICE) is then defined by the model (with the 
+%maximum-likelihood estimates of the model parameters) which gives the smallest AIC value 
+%amongst the competing models considered.
+The `best' model amongst the competing models considered is that with the smallest AIC value -- this model (with the maximum-likelihood estimates of its parameters) is called the `Minimum AIC Estimate' (MAICE). 
+
+An alternative approach is to perform a series of likelihood ratio tests for pairs of nested models. For example, if we wish to compare the four models depicted in Figure~\ref{models}, we can start by assuming the simplest of these four models (i.e. that with the smallest number of parameters) as the null hypothesis: the isolation model (Figure~\ref{models}a). We can then proceed by performing two likelihood ratio tests: one where we test the isolation model ($H_0$) against the alternative hypothesis of the IIM model %(which we will denote by~$H_{1(i)}$); 
+(which we will denote by~$H_{1,1}$);
+%$H_{1a}$
+and one
+%a second LR test 
+where we test the isolation model ($H_0$) against the model of secondary contact 
+%($H_{1b}$)
+%(denoted by $H_{1(ii)}$)
+(denoted by $H_{1,2}$). Since we are performing two tests, a Bonferroni correction for multiple testing 
+% is appropriate. 
+should be applied.
+For example, if we wish to test whether the isolation model is rejected at a significance level of 5\%, we will use a significance level of 2.5\% for each of the two tests ($H_0$ against $H_{1,1}$ and $H_0$ against $H_{1,2}$), so that the overall probability of a type~1 error (falsely rejecting the isolation model when in fact it is the `true' model) is at most 5\%. Depending on the results of these two significance tests, we then proceed as follows. If neither test gives a significant result, then we retain the isolation model as our `best' model and conclude that there is no significant evidence of gene flow at any time between time $\tau_0$ ago and the present. If the test of $H_0$ against $H_{1,1}$ is significant, but the test of $H_0$ against $H_{1,2}$ is not, then we reject the isolation model in favour of the IIM model; in this case we then proceed by assuming the IIM model to be our new null hypothesis and testing this against the full GIM model as our new alternative hypothesis (no further correction for multiple testing is required, as this third LR test is only performed if the first LR test gave a significant result). Similarly, if the test of $H_0$ against $H_{1,2}$ is significant, but the test of $H_0$ against $H_{1,1}$ is not, then we reject the isolation model in favour of the model of secondary contact; we then proceed by taking the latter model to be our new null hypothesis and testing it against the full GIM model.
+%or: then we reject the isolation model in favour of the model of secondary contact and proceed by testing the latter model against the full GIM model.
+If the first two LR tests ($H_0$ against $H_{1,1}$ and $H_0$ against $H_{1,2}$) are {\em both} significant, then we will reject the isolation model in favour of the alternative model that
+%, given the data,
+has the highest likelihood: $H_{1,1}$ or $H_{1,2}$ i.e. the IIM model or the model of secondary contact; we then use that model as our new null hypothesis and test it against the full GIM model. 
+
+In each of the Likelihood Ratio tests described above, the alternative model has two more free parameters than the null model, namely the migration rates in both directions in either the most recent or the intermediate stage of the model. For each test, the null model corresponds to the two migration rates concerned being zero, i.e. a parameter value on the boundary of the parameter space. 
+% i.e. taking a value on the boundary of the parameter space.   
+% If the null hypothesis is true, then the distribution of the test statistic
+The null distribution of the LRT statistic
+$$\Lambda=2 \times \left(\ln\hat{L}(\mbox{alternative model})-\ln\hat{L}(\mbox{null 
+model}) \right)$$
+is therefore not $\chi^2_2$, but a mixture of $\chi^2_{\nu}$ distributions for $\nu=0,1,2$ \citep{Self1987, Silvapulle2005}; using $\chi^2_2$ instead of the correct null distribution is conservative. In the mixture of $\chi^2_{\nu}$ distributions, computation of the weights of $\chi^2_{0}$ and $\chi^2_{2}$ is not straightforward, but the weight of $\chi^2_{1}$ is known to be $\frac{1}{2}$ \citep{Self1987, Silvapulle2005}. The use of the mixture $\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$
+% $\frac{1}{2} \times \chi^2_1 +\frac{1}{2} \times \chi^2_2$
+ instead of the correct null distribution is therefore also conservative, and results in a smaller loss of power compared to the use of $\chi^2_2$.
+% ..., so that using $\chi^2_2$ as the null distribution is conservative.
+% ? OMIT:
+%\citet{Wang2010} used the mixture $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ as the null distribution when testing for gene flow in the simpler isolation-with-migration model. 
+%In the literature, the mixture $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ has also been used as the null distribution when testing for gene flow in the simpler isolation-with-migration model \citep{Wang2010}. Although this mixture is in general not quite the precise asymptotic null distribution, its use in the context of IM and GIM models may still be conservative and would result in a smaller loss of power compared to the use of the mixture $\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$ suggested above. However, to the best of our knowledge it 
+%%is yet to be established
+%has not been formally established whether the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the correct null distribution in this context is always conservative (i.e. whether the weight of $\chi^2_2$ in the mixture that makes up the correct null distribution is $\leq \frac{1}{4}$).
+%\\OR:\\
+In the literature, the mixture $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ has also been used as the null distribution when testing for gene flow in the simpler isolation-with-migration model \citep{Wang2010}. The use of this latter mixture results in a smaller loss of power compared to the use of the mixture $\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$ suggested above; however, to the best of our knowledge it is yet to be established whether the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the precise asymptotic null distribution in the context of testing for gene flow in the IM or GIM models is always conservative (i.e. whether the weight of $\chi^2_2$ in the mixture that makes up the correct asymptotic null distribution is $\leq \frac{1}{4}$).
+
+Both methods of model selection described above, using AIC scores or likelihood ratio tests, will be examined for simulated data in the next Section.
+%or: In Subsection~?? we will examine both methods of model selection described above (using AIC scores or LR tests) for simulated data.
+In the case of likelihood ratio tests, we will also consider
+%compare 
+the performance of all three `null distributions' suggested in the previous paragraph.
+
+
+\section{Simulation results}
+\label{Section: simulation results}
+% or: Simulation study
+
+%\subsection{Accuracy of parameter estimates}
+
+%To examine the accuracy of ML estimates of the parameters of the GIM model obtained with our code, we simulated 200 data sets from a GIM model representing a scenario of decreasing gene flow, and 200 data sets from a GIM model with increasing gene flow. 
+%Each simulated data set consisted of the numbers of nucleotide differences between one pair of DNA sequences sampled at each of 40,000 independent loci: for 10,000 loci, two DNA sequences were sampled both from descendant population~1; for 10,000 loci, two DNA sequences were sampled from descendant population~2; and for 20,000 loci, one DNA sequence was sampled from each of the two descendant populations. The relative mutation rates of the 40,000 loci were simulated from a Gamma$(10,10)$ distribution. 
+%%or: from a Gamma distribution with shape and scale parameter both equal to 10.   
+%The `true' values of the population size parameters and time parameters assumed for the simulations were as follows:
+%$\theta_a=3,\,\, \theta=2,\,\, \theta_b=4,\,\, \theta_{c_1}=3,\,\, \theta_{c_2}=6,\,\, T_1=4,\,\, V=4$.
+%%Such values would arise, for example, for 
+%These parameter values were based on a hypothetical scenario where the sampled loci have an average length of 500 nucleotide sites, with an average mutation rate of $10^{-9}$ per site per generation, and with population sizes of the order of a million individuals 
+%%($\theta=2$ corresponds to 1 million diploid individuals);
+%($\theta=2$ corresponds to a population size of 2 million DNA sequences, or 1 million diploid individuals);
+%this order of magnitude of the mutation rate and effective population sizes may, for example, be broadly realistic for some species of {\em Drosophila} \citep{Wang2010, Keightley2014}.
+%% or: Such a hypothetical scenario could reflect, for example, loci with an average length of 500 nucleotide sites, an average substitution rate of $10^{-9}$ per site per generation, and population sizes of the order of 1 million diploid individuals.
+%%The durations of the intermediate and the most recent stage of the model correspond to 2 expected mutations per DNA sequence during each of these time periods, which in this case would equate to 4 million generations each. 
+%%(measured by twice the expected number of mutations per DNA sequence during the period concerned)  
+%The values of the time parameters $T_1$ and $V$ correspond to 2 expected mutations per DNA sequence during, respectively, the most recent and the intermediate stage of the model, which in this hypothetical scenario would equate to 4 million generations each.   
+%In our simulations of a GIM model with decreasing gene flow, the `true' values of the migration parameters were assumed to be
+%${M_1}^{\!*}=0.2$ and ${M_2}^{\!*}=0.4$ during the intermediate stage of the model, decreasing by a factor of five to ${M'_1}^{*}=0.04$ and ${M'_2}^{*}=0.08$ during the most recent stage of the model; 
+%recall that ${M_i}^{\!*}$ and ${M'_i}^{*}$ are twice the numbers of immigrant DNA sequences into descendant population~$i$ per generation during, respectively, the intermediate and the most recent stage of the model.
+%When simulating a GIM model with increasing gene flow, the `true' values of the migration parameters assumed were ${M_1}^{\!*}=0.04$ and ${M_2}^{\!*}=0.08$ during the intermediate stage of the model, increasing five-fold to ${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$ during the most recent stage of the model. For each simulated data set, ML estimates of the 11 parameters of the GIM model were obtained jointly, while the relative mutation rates of the 40,000 loci were treated as known constants. 
+
+%Boxplots of the parameter estimates obtained for the 200 simulated data sets under our scenario of decreasing gene flow are shown in Figures ??. It is seen that for all 11 parameters, the median estimate obtained (the bold line in each boxplot) is close to the true parameter value (indicated by a red cross in each boxplot); however, the estimates of the population size and migration parameters of the intermediate stage of the model are more variable than those of the other parameters of the GIM model. 
+%% or: but that the estimates of the population size and migration parameters of the intermediate stage of the model display considerable variability
+%Table ?? shows, for each parameter, the bias and the root mean square error of the estimates obtained, relative to the size of the true parameter value:
+%for example, for the parameter $\theta$, the relative bias is defined as 
+%$\frac{E(\hat{\theta}-\theta)}{\theta}$%
+%$E(\hat{\theta}-\theta)/\theta$ and the relative root mean square error is given by $\sqrt{E[(\hat{\theta}-\theta)^2]}/\theta$ (and analogously for the other parameters);
+%%or: the relative bias was computed as ${\displaystyle \frac{1}{200} \sum_{i=1}^{200}(\hat{\theta}_i-\theta)/\theta}$
+%estimates of these quantities were computed by replacing the expectations in these formulae by averages over the 200 simulated data sets.
+
+To examine the accuracy of ML estimates of the parameters of the GIM model obtained with our code, 
+%and to examine the accuracy of our model selection procedure,
+and to examine whether our method makes it possible to distinguish between the different models considered in Figure~\ref{models},
+we simulated 200 data sets from each of the following five scenarios:
+\begin{enumerate}
+\item[(i)] a GIM model with decreasing gene flow;
+\item[(ii)] a GIM model with increasing gene flow;
+\item[(iii)] a GIM model with gene flow decreasing to zero, i.e. an isolation-with-initial-migration model;
+\item[(iv)] a GIM model with zero migration rates in the intermediate stage of the model, i.e. a model of secondary contact;
+\item[(v)] a GIM model with all migration rates equal to zero, i.e. a model of complete isolation.
+\end{enumerate}
+Each simulated data set consists of the numbers of nucleotide differences between one pair of DNA sequences sampled at each of 40,000 independent loci: for 10,000 loci, two DNA sequences were sampled both from descendant population~1; for 10,000 loci, two DNA sequences were sampled from descendant population~2; and for 20,000 loci, one DNA sequence was sampled from each of the two descendant populations. The relative mutation rates of the 40,000 loci were simulated from a Gamma$(10,10)$ distribution. 
+%or: from a Gamma distribution with shape and scale parameter both equal to 10.   
+
+The `true' values of the population size parameters and time parameters assumed for the simulations were as follows:
+$\theta_0=3,\,\, \theta_1=2,\,\, \theta_2=4,\,\, \theta'_1=3,\,\, \theta'_2=6,\,\, T_1=4,\,\, V=4$.
+%$$\theta_a=3,\,\, \theta_{b_1}=2,\,\, \theta_{b_2}=4,\,\, \theta_{c_1}=3,\,\, \theta_{c_2}=6,\,\, T_1=4,\,\, V=4.$$
+%$\theta_a=3,\,\, \theta=2,\,\, \theta_b=4,\,\, \theta_{c_1}=3,\,\, \theta_{c_2}=6,\,\, T_1=4,\,\, V=4$.
+%Such values would arise, for example, for 
+These parameter values were based on a hypothetical scenario where the sampled loci have an average length of 500 nucleotide sites, with an average mutation rate of $10^{-9}$ per site per generation, and with population sizes of the order of a million individuals 
+%($\theta=2$ corresponds to 1 million diploid individuals);
+%($\theta=2$ corresponds to a population size of 2 million DNA sequences, or 1 million diploid individuals);
+(for example, $\theta_1=2$ corresponds in this case to a population size of 2 million DNA sequences, or 1 million diploid individuals);
+this order of magnitude of the mutation rate and effective population sizes may, for example, be broadly realistic for some species of {\em Drosophila} \citep{Wang2010, Keightley2014}.
+The durations of the intermediate and the most recent stage of the model correspond to 2 expected mutations per DNA sequence during each of these time periods, which in this hypothetical scenario would equate to 4 million generations each.
+%The values of the time parameters $T_1$ and $V$ correspond, respectively, to 2 expected mutations per DNA sequence during the most recent and the intermediate stage of the model, which in this hypothetical scenario would equate to 4 million generations each.   
+%Such values could reflect, for example, a hypothetical scenario of loci with an average length of 500 nucleotide sites, an average substitution rate of $10^{-9}$ per site per generation, and population sizes of the order of 1 million diploid individuals (with $\theta=2$ corresponding to a population size of 2 million DNA sequences, or 1 million diploid individuals); the durations of the intermediate and the most recent stage of the model correspond to 2 expected mutations per DNA sequence during each of these time periods, which in this hypothetical scenario would equate to 4 million generations each. \\
+
+For scenarios (i) to (v) listed above, the migration parameters were assumed to have the following `true' values:
+%The `true' values of the migration parameters were assumed to be, for the five scenarios listed above:
+\begin{enumerate}
+\item[(i)] ${M_1}^{\!*}=0.2$ and ${M_2}^{\!*}=0.4$, decreasing by a factor of five to ${M'_1}^{*}=0.04$ and ${M'_2}^{*}=0.08$; 
+\item[(ii)] ${M_1}^{\!*}=0.04$ and ${M_2}^{\!*}=0.08$, increasing five-fold to ${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$;
+\item[(iii)] ${M_1}^{\!*}=0.2$ and ${M_2}^{\!*}=0.4$, decreasing to ${M'_1}^{*}={M'_2}^{*}=0$; 
+\item[(iv)] ${M_1}^{\!*}={M_2}^{\!*}=0$, increasing to ${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$;
+\item[(v)]  ${M_1}^{\!*}={M_2}^{\!*}={M'_1}^{*}={M'_2}^{*}=0$;
+\end{enumerate}
+recall that ${M_i}^{\!*}$ and ${M'_i}^{*}$ are twice the numbers of immigrant DNA sequences into descendant population~$i$ per generation during, respectively, the intermediate and the most recent stage of the model.
+
+To investigate the accuracy of the ML estimates obtained with our GIM code, we first fitted a GIM model to each simulated data set. Thus, for each simulated data set, ML estimates of the 11 parameters of the GIM model were obtained, while the relative mutation rates of the 40,000 loci were treated as known constants. Boxplots of the 200 sets of parameter estimates obtained for each of the five scenarios are shown in Figure~\ref{boxplots}. 
+In each scenario, it is seen that for all 11 parameters, the median estimate obtained (the bold line in each boxplot) is close to the true parameter value (indicated by a red cross in each boxplot); however, in scenario~(ii) (GIM model with increasing gene flow), the median of the estimates obtained for ${M_1}^{\!*}$ was $0$, whereas the true value of this parameter assumed in the simulations was very small but non-zero (${M_1}^{\!*}=0.04$). The plots also suggest that, while the population size parameters of the descendant populations during the most recent stage of the model and of the ancestral population can be estimated with high precision, the estimates of the population size parameters during the intermediate stage of the model display
+% are subject to
+ considerably more variability. The estimates of the migration parameters are also quite variable, 
+%especially 
+again particularly so for the intermediate stage of the model. 
+Table~\ref{simresults} lists, for each of the five scenarios and for each of the 11 parameters, the mean and standard deviation of the estimates obtained, as well as the relative bias (i.e. the bias divided by the true parameter value).
+%It is seen that in almost all cases the relative bias is less than 10\%, and in most cases it is less than 1\%. 
+It is seen that for most parameters and scenarios, the relative bias is very small: less than 1\% in most cases, and less than 10\% in all but three cases. These three exceptions all concern 
+% arise for
+the intermediate stage of the model in scenarios of increasing gene flow: the estimates of the migration parameters ${M_1}^{\!*}$ and ${M_2}^{\!*}$ in scenario~(ii), and the estimates of one of the population size parameters, 
+% $\theta$
+$\theta_1$, in scenario~(iv); 
+%in these cases the relative bias is somewhat larger, but not excessively so. 
+in these cases the relative bias is larger, but not excessive.
+
+\newgeometry{top=2.5cm, bottom=1cm}
+\begin{figure}[!p]
+%\centering
+\hspace*{-2cm}
+\vspace*{-0.85cm}
+\textbf{(i)}\par\smallskip
+\makebox[\textwidth][c]{
+\includegraphics[width=.4\textwidth]{boxplots_1H_sizes.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_1H_times.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_1H_migrants.pdf}
+}\vspace*{-0.75cm}
+\par\smallskip
+\hspace*{-2cm}
+\vspace*{-0.85cm}
+\textbf{(ii)}\par\smallskip
+\makebox[\textwidth][c]{
+\includegraphics[width=.4\textwidth]{boxplots_2H_sizes.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_2H_times.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_2H_migrants.pdf}
+}\vspace*{-0.75cm}
+\par\smallskip
+\hspace*{-2cm}
+\vspace*{-0.85cm}
+\textbf{(iii)}\par\smallskip
+\makebox[\textwidth][c]{
+\includegraphics[width=.4\textwidth]{boxplots_3H_sizes.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_3H_times.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_3H_migrants.pdf}
+}\vspace*{-0.75cm}
+\par\smallskip
+\hspace*{-2cm}
+\vspace*{-0.85cm}
+\textbf{(iv)}\par\smallskip
+\makebox[\textwidth][c]{
+\includegraphics[width=.4\textwidth]{boxplots_4H_sizes.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_4H_times.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_4H_migrants.pdf}
+}\vspace*{-0.75cm}
+\par\smallskip
+\hspace*{-2cm}
+\vspace*{-0.85cm}
+\textbf{(v)}\par\smallskip
+\makebox[\textwidth][c]{
+\includegraphics[width=.4\textwidth]{boxplots_5H_sizes.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_5H_times.pdf}\quad
+\hspace*{-1cm}
+\includegraphics[width=.4\textwidth]{boxplots_5H_migrants.pdf}
+}\vspace*{-0.5cm}
+\caption{Box plots of the ML estimates of the parameters of the GIM model obtained for 200 simulated data sets under each of scenarios~(i) to~(v). 
+%Each simulated data set consists of the number of nucleotide differences between one pair of DNA sequences at each of 40,000 different loci (two sequences from population 1 at 10,000 loci; two sequences from population 2 at 10,000 loci; one sequence from each population at 20,000 loci). 
+The `true' value of each parameter is indicated by a red cross.
+ }
+\label{boxplots}
+\end{figure}
+\restoregeometry
+
+%Table ?? shows, for each parameter, the bias and the root mean square error of the estimates obtained, relative to the size of the true parameter value:
+%for example, for the parameter $\theta$, the relative bias is defined as 
+%%$\frac{E(\hat{\theta}-\theta)}{\theta}$
+%$E(\hat{\theta}-\theta)/\theta$ and the relative root mean square error is given by $\sqrt{E[(\hat{\theta}-\theta)^2]}/\theta$ (and analogously for the other parameters);
+%%or: the relative bias was computed as ${\displaystyle \frac{1}{200} \sum_{i=1}^{200}(\hat{\theta}_i-\theta)/\theta}$
+%estimates of these quantities were computed by replacing the expectations in these formulae by averages over the 200 simulated data sets.
+
+%\begin{table}[!tb]
+%\caption{Relative bias and relative root mean square error of ML estimates of the parameters of the GIM model} 
+%\vspace*{-1mm}
+%\begin{center}
+%{\small \begin{tabular}{llccc} \hline  \vspace*{-3mm} \\ parameter~ & ~true value~ & ~mean estimate~ & ~relative bias~ &~ %relative root MSE~ \\ \hline \vspace*{-2mm} \\ 
+%$\theta_a$ & 3 & 2.9923 &  -0.0026 & 0.0192 \\ 
+%$\theta$ & 2 & 1.9864 & -0.0068 & 0.3277 \\ 
+%$\theta_b$ & 4  & 3.9184 & -0.0204 & 0.1661 \\ 
+%$\theta_{c_1}$ & 3 & 3.0047 & ~0.0016 & 0.0264 \\  
+%$\theta_{c_2}$ & 6 & 6.0080 & ~0.0013 & 0.0270 \\  
+%$T_1$ & 4 & 4.0884 & ~0.0221 & 0.1512 \\ 
+%$V$ & 4 & 3.9884 & -0.0029 & 0.1089 \\ 
+%${M_1}^{\!*}$ & 0.2 & 0.2004 & ~0.0018 & 0.7804 \\  
+%${M_2}^{\!*}$ & 0.4 & 0.4247 & ~0.0618 & 0.5111 \\  
+%${M'_1}^{*}$ & 0.04 & 0.0417 & ~0.0430 & 0.9777 \\ 
+%${M'_2}^{*}$ & 0.08 & 0.0794 & -0.0072 & 0.6128
+%\\ \hline 
+%\end{tabular}}
+%\end{center}
+%\end{table}
+
+%or: give mean (sd), median, (q1,q3) and relative bias of the estimates of each parameter 
+
+%\begin{table}[!tb]
+
+\begin{sidewaystable}[!p]
+\vspace*{0.5cm}
+\caption{\bf \\Mean, standard deviation and relative bias of the ML estimates of the parameters of the GIM model} 
+% Summary statistics for the ML estimates of the parameters of the GIM model
+% also give relative bias?
+\label{simresults}
+\vspace*{-3mm}
+\begin{center}
+%\hspace*{-0.5cm}
+{\small \begin{tabular}{|l|l|lllllllllll|} \hline  
+\vspace*{-2mm} & & & & & & & & & & & & \\
+%  & & $\theta_a$ & $\theta_{b_1}$ & $\theta_{b_2}$ & $\theta_{c_1}$ & $\theta_{c_2}$ & $T_1$ & $V$ & ${M_1}^{\!*}$ & ${M_2}^{\!*}$ & ${M'_1}^{*}$ & ${M'_2}^{*}$ \\ \hline 
+  & & $\theta_0$ & $\theta_1$ & $\theta_2$ & $\theta'_1$ & $\theta'_2$ & $T_1$ & $V$ & ${M_1}^{\!*}$ & ${M_2}^{\!*}$ & ${M'_1}^{*}$ & ${M'_2}^{*}$ \\ \hline 
+\vspace*{-2mm} & & & & & & & & & & & & \\
+ {\bf scenario (i)} & true parameter value & ~3 & ~2 & ~4 & ~3 & ~6 & ~4 & ~4 & ~0.2 & ~0.4 & ~0.04 & ~0.08 
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\
+ %mean estimate (s.d.) & ~2.9923 (0.0572) & ~1.9864 (0.6569)& ~3.9184 (0.6608) & ~3.0047 (0.0791) & ~6.0080 (0.1623) & ~4.0884 (0.5997) & ~3.9884 (0.4365) & ~0.2004 (0.1565) & ~0.4247 (0.2034) & ~0.0417 (0.0392) & ~0.0794 (0.0491) \\
+& mean estimate & ~2.9923 & ~1.9864 & ~3.9184 & ~3.0047 & ~6.0080 & ~4.0884 & ~3.9884  & ~0.2004 & ~0.4247 & ~0.0417 & ~0.0794 \\
+& (standard deviation) & (0.0572) & (0.6569)& (0.6608) & (0.0791) & (0.1623) & (0.5997) & (0.4365) & (0.1565) & (0.2034) & (0.0392) & (0.0491) 
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\
+& relative bias & -0.0026 & -0.0068 & -0.0204 & ~0.0016 & ~0.0013 & ~0.0221 & -0.0029 & ~0.0018 & ~0.0618 & ~0.0430 & -0.0072 
+%\\ \vspace*{-2mm} \\
+%& median estimate & ~2.9998 & ~2.0315 & ~3.9686 & ~3.0064 & ~6.0133 & ~4.0336 & ~3.9953 & ~0.1765 & ~0.3981 & ~0.0310 & ~0.0914 \\ 
+%& (lower quartile, & (2.9581, & (1.5315, & (3.6322, & (2.9505, & (5.8855, & (3.7025, & (3.6933, & (0.0834, & (0.3064, & (0.0002, & (0.0346,\\
+%& ~~~~~~~upper quartile) & ~3.0261) & ~2.4474) & ~4.3601) & ~3.0588) & ~6.1108) & ~4.5268) & ~4.2545) & ~0.2852) & ~0.5063) & ~0.075) & ~0.1218) 
+%rel. root MSE & ~0.0192 & ~0.3277 & ~0.1661 & ~0.0264 & ~0.0270 & ~0.1512 & ~0.1089 & ~0.7804 & ~0.5111 & ~0.9777 & ~0.6128 
+\\ \hline \vspace*{-2mm} & & & & & & & & & & & & \\
+ {\bf scenario (ii)} & true parameter value & ~3 & ~2 & ~4 & ~3 & ~6 & ~4 & ~4 & ~0.04 & ~0.08 & ~0.2 & ~0.4 
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\ 
+& mean estimate & ~2.9890 & ~2.1823 & ~3.7696 & ~3.0262 & ~5.9992 & ~4.0681 & ~3.9740 & ~0.0469 & ~0.1072 & ~0.1872 & ~0.4124 \\
+& (standard deviation) & (0.0531) & (0.7526) & (0.6625) & (0.0947) & (0.1625) & (0.6038) & (0.5610) & (0.0808) & (0.1011) & (0.0509) & (0.0682)
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\
+& relative bias & -0.0037 & ~0.0912 & -0.0576 & ~0.0087 & -0.0001 & ~0.0170 & -0.0065 & ~0.1714 & ~0.3398 & -0.0640 & ~0.0310
+%\\ \vspace*{-2mm} \\
+%& median estimate & ~2.9919 & ~2.0597 & ~3.8853 & ~3.0193 & ~6.0000 & ~4.0491  & ~3.9611 & ~0 & ~0.0932 & ~0.1935 & ~0.4018 \\
+%& (lower quartile, & (2.9524, & (1.6617, & (3.3459, & (2.9615, & (5.8980, & (3.6995, & (3.6204, & (0, & (0, & (0.1548, & (0.3617, \\ 
+%& ~~~~~~~upper quartile) & ~3.0248) & ~2.6482) & ~4.2692) & ~3.0851) & ~6.1040) & ~4.4820) & ~4.3116) & ~0.0630) & ~0.1870) & ~0.2262) & ~0.4680) 
+\\ \hline \vspace*{-2mm} & & & & & & & & & & & & \\
+ {\bf scenario (iii)} & true parameter value & ~3 & ~2 & ~4 & ~3 & ~6 & ~4 & ~4 & ~0.2 & ~0.4 & ~0 & ~0
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\ 
+& mean estimate & ~3.0001 & ~1.9509 & ~3.9890 & ~2.9941 & ~6.0031 & ~4.0452 & ~3.9843 & ~0.2081 & ~0.3948 & ~0.0012 & ~0.0013 \\
+& (standard deviation) & (0.0567) & (0.3971) & (0.3810) & (0.0567) & (0.1322) & (0.4791) & (0.3294) & (0.1256) & (0.1615) & (0.0031) & (0.0036)
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\
+& relative bias & ~0.0000 & -0.0246 & -0.0027 & -0.0020 & ~0.0005 & ~0.0113 & -0.0039 & ~0.0405 & -0.0130 & ~~~~-- & ~~~~--
+%\\ \vspace*{-2mm} \\
+%& median estimate & ~2.9988 & ~1.9871 & ~3.9865 & ~2.9896 & ~6.0012 & ~4.0724 & ~3.9534 & ~0.2039 & ~0.3847 & ~0 & ~0 \\
+%& (lower quartile, & (2.9623, & (1.7072, & (3.7429, & (2.9564, & (5.9040, & (3.6946, & (3.7643, & (0.1197, & (0.2828, & (0, & (0, \\
+%& ~~~~~~~upper quartile) & ~3.0402) & ~2.2448) & ~4.2630) & ~3.0352) & ~6.0897) & ~4.4020) & ~4.2000) & ~0.2863) & ~0.5002) & ~0) & ~0) 
+\\ \hline \vspace*{-2mm} & & & & & & & & & & & & \\
+ {\bf scenario (iv)} & true parameter value & ~3 & ~2 & ~4 & ~3 & ~6 & ~4 & ~4 & ~0 & ~0 & ~0.2 & ~0.4 
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\ 
+& mean estimate & ~2.9858 & ~2.3197 & ~3.7841 & ~3.0371 & ~6.0014 & ~3.9821 & ~4.0765 & ~0.0224 & ~0.0432 & ~0.1802 & ~0.4223 \\
+& (standard deviation) & (0.0533) & (0.8562) & (0.6959) & (0.0904) & (0.1772) & (0.4955) & (0.4492) & (0.0538) & (0.0738) & (0.0542) & (0.0718)
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\
+& relative bias & ~-0.0047 & ~0.1598 & -0.0540 & ~0.0124 & ~0.0002 & -0.0045 & ~0.0191 & ~~~~-- & ~~~~-- & -0.0990 & ~0.0557
+%\\ \vspace*{-2mm} \\
+%& median estimate & ~2.9884 & ~2.1663 & ~3.8749 & ~3.0211 & ~6.0019 & ~3.9708 & ~4.1007 & ~0 & ~0 & ~0.1905 & ~0.4104 \\
+%& (lower quartile, & (2.9491, & (1.7193, & (3.3928, & (2.9745, & (5.9073, & (3.6402, & (3.8054, & (0, & (0, & (0.1451, & (0.3745, \\
+%& ~~~~~~~upper quartile) & ~3.0214) & ~2.7839) & ~4.2842) & ~3.0891) & ~6.1238) & ~4.3114) & ~4.3617) & ~0.0045) & ~0.0651) & ~0.2198) & ~0.4660)
+ \\ \hline \vspace*{-2mm} & & & & & & & & & & & & \\
+ {\bf scenario (v)} & true parameter value & ~3 & ~2 & ~4 & ~3 & ~6 & ~4 & ~4 & ~0 & ~0 & ~0 & ~0 
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\ 
+& mean estimate & ~2.9876 & ~1.9715 & ~3.9788 & ~3.0064 & ~5.9985 & ~4.0077 & ~4.0211 & ~0.0046 & ~0.0065 & ~0.0001 & ~0.0003 \\
+& (standard deviation) & (0.0494) & (0.1300) & (0.2272) & (0.0568) & (0.1394) & (0.4016) & (0.4124) & (0.0099) & (0.0156) & (0.0006) & (0.0009)
+\\ \vspace*{-2mm} & & & & & & & & & & & & \\
+& relative bias & -0.0041 & -0.0143 & -0.0053 & ~0.0021 & -0.0002 & ~0.0019 & ~0.0053 & ~~~~-- & ~~~~-- & ~~~~-- & ~~~~-- 
+%\\ \vspace*{-2mm} \\
+%& median estimate & ~2.989 & ~1.9735 & ~3.9829 & ~3.0079 & ~5.9955 & ~3.9699 & ~4.0694 & ~0 & ~0 & ~0 & ~0 \\
+%& (lower quartile, & (2.955, & (1.9001, & (3.8129, & (2.9667, & (5.8988, & (3.7513, & (3.7641, & (0, & (0, & (0, & (0, \\
+%& ~~~~~~~upper quartile) & ~3.0165) & ~2.0566) & ~4.1407) & ~3.0439) & ~6.0965) & ~4.2426) & ~4.2844) & ~0.0020) & ~0.0007) & ~0) & ~0) 
+\\ \hline
+\end{tabular}}
+\end{center}
+\caption*{Summary statistics based on 200 simulated data sets for each scenario. Each simulated data set consists of the number of nucleotide differences between one pair of DNA sequences at each of 40,000 different loci (two sequences from population 1 at 10,000 loci; two sequences from population 2 at 10,000 loci; one sequence from each population at 20,000 loci). When the true value of a parameter is $0$, the relative bias (i.e. the bias divided by the true parameter value) is undefined, indicated by a `--' symbol in the table.}  
+%\end{table}
+\end{sidewaystable}
+
+To examine whether our method makes it possible to distinguish between the four models considered in Figure~\ref{models}, we fitted all four models (GIM, IIM, secondary contact, isolation) to each of our 1,000 simulated data sets (the 200 data sets simulated from each of the five scenarios listed at the start of this Section). For each simulated data set we applied the model selection procedures described in Subsection~\ref{subsection: model comparison} to select the best-fitting model: we did this using either the AIC criterion, or a sequence of Likelihood Ratio tests at an overall significance level of 5\%;
+%or: a sequence of Likelihood Ratio tests at a significance level of 5\% (using a Bonferroni correction where appropriate).
+ for the approach using Likelihood Ratio tests, as the precise asymptotic null distribution is not easy to compute, results were obtained using each of the three distributions suggested in Subsection~\ref{subsection: model comparison}: $\chi^2_2$\,, 
+$\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$ or $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$\,. Table~\ref{modelresults} shows, for each of our five scenarios, for what proportion of the 200 simulated data sets each model was selected as the best-fitting model; the proportion of simulated data sets for which the correct model was selected is highlighted in bold in each case.
+%or: the percentages in bold show, for each of our five scenarios, the proportion of simulated data sets for which the correct model was selected.
+It is seen that for scenarios~(i), (iii), (iv) and (v), the correct model was selected for nearly all of the simulated data sets (96\% or better),
+% the vast majority of simulated data sets,
+for both methods (AIC or LRT) and for all three `null distributions' considered.
+%regardless of the method (AIC or LRT) and null distribution used. 
+%In particular, in scenario~(i), i.e. a GIM model with gene flow decreasing from ...
+ However for most of the data sets simulated from scenario~(ii), i.e. a GIM model 
+%with increasing gene flow, 
+with gene flow {\em increasing} from 
+%${M_1}^{\!*}=0.04$ and ${M_2}^{\!*}=0.08$ to ${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$,
+$({M_1}^{\!*},{M_2}^{\!*})=(0.04,0.08)$ to $({M'_1}^{*},{M'_2}^{*})=(0.2,0.4)$,
+the model of secondary contact was selected as the best-fitting model instead of the `true' GIM model; so whilst our method correctly inferred an {\em increase} of gene flow for all these data sets, 
+%correctly inferred an {\em increase} of gene flow for all 200 of the simulated data sets from this scenario, 
+% checked: estimate of (M1+M2) < estimate of (M'1+M'2) for all data sets, in best-fitting model in each case (GIM or secondary contact)
+%there was insufficient power 
+%% only limited power
+% to detect the small level of gene flow in the intermediate stage of the model in most cases. 
+its power to detect the small amount of gene flow that occurred in the intermediate stage of the model was low.
+This starkly contrasts with our results for scenario~(i), i.e. a GIM model with gene flow {\em decreasing} from $({M_1}^{\!*},{M_2}^{\!*})=(0.2,0.4)$ to $({M'_1}^{*},{M'_2}^{*})=(0.04,0.08)$: for this scenario, our method correctly identified the GIM model as the best-fitting model for 99.5\% of the simulated data sets, demonstrating very high power to detect the small level of gene flow in the most recent stage of the model. It should perhaps also be noted that for none of the 800 data sets simulated from scenarios with gene flow (scenarios~(i) to~(iv)), the isolation model was selected as the best-fitting model, i.e. the overall  power of our method to detect that gene flow had occurred at some point in the past (i.e. a departure from the isolation model) was very high. 
+%However, assigning the inferred gene flow appropriately to the two different time periods may be difficult particularly in a scenario of increasing gene flow.
+However, 
+%our method's ability to attribute the inferred gene flow to the correct time periods appears to be limited in a scenario of increasing gene flow.
+our method's ability to apportion the inferred gene flow accurately to the two different time periods appears to be limited in the case of increasing gene flow.
+% however, accurately partitioning the inferred gene flow between the two different time periods (the intermediate and the most recent  stage of the model) may be difficult particularly in a scenario of increasing gene flow.
+
+\begin{table}[!b]
+\caption{\bf \\Model selection for simulated data: Results}
+\label{modelresults}
+\vspace*{-3mm}
+\begin{center}
+\hspace*{-0.65cm}
+{\small \begin{tabular}{|c|c|l|rrrr|} \hline 
+\vspace*{-2mm} & & & & & &  \\
+ &  &  & \multicolumn{4}{c|}{\bf best-fitting model} \\  
+\vspace*{-2mm} & & & & & &  \\
+\cline{4-7} 
+\vspace*{-2mm} & & & & & &  \\
+{\bf simulation} & {\bf true}    & \multicolumn{1}{c|}{\bf method} & \multicolumn{1}{c}{\bf ~~GIM~~} & \multicolumn{1}{c}{\bf ~~IIM~~} & \multicolumn{1}{c}{\bf secondary} & \multicolumn{1}{c|}{\bf isolation} \\
+{\bf scenario}    & {\bf model} &                                             &                                        &                                      & \multicolumn{1}{c}{\bf contact}     &                                               \\ 
+\vspace*{-2mm} & & & & & &  \\
+\hline 
+\vspace*{-2mm} & & & & & &  \\
+{\bf (i)} & {\bf GIM} & AIC                                                                                                          & {\bf 99.5\,\%} & 0\,\% &0.5\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+            &                & LRT ($\chi^2_2$)                                                                                      & {\bf 99.5\,\%} & 0\,\% &0.5\,\% & 0\,\% \\ 
+\vspace*{-3mm} & & & & & &  \\
+            &                & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)                                   & {\bf 99.5\,\%} & 0\,\% &0.5\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+            &                & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$) & {\bf 99.5\,\%} & 0\,\% &0.5\,\% & 0\,\%  \\ 
+\vspace*{-2mm} & & & & & &  \\
+\hline
+\vspace*{-2mm} & & & & & &  \\
+{\bf (ii)} & {\bf GIM} & AIC                                                                                                          & {\bf 16.0\,\%} & 0\,\% &84.0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+             &                & LRT ($\chi^2_2$)                                                                                      & {\bf 6.5\,\%} & 0\,\% &93.5\,\% & 0\,\% \\ 
+\vspace*{-3mm} & & & & & &  \\
+             &                & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)                                   & {\bf 11.5\,\%} & 0\,\% &88.5\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+             &                & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$) & {\bf 15.5\,\%} & 0\,\% &84.5\,\% & 0\,\%  \\ 
+\vspace*{-2mm} & & & & & &  \\
+\hline
+\vspace*{-2mm} & & & & & &  \\
+{\bf (iii)} & {\bf IIM} & AIC                                                                                                          & 2.0\,\% & {\bf 98.0\,\%} &0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+            &                 & LRT ($\chi^2_2$)                                                                                        & 2.0\,\% & {\bf 98.0\,\%} &0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+            &                 & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)                                     & 2.0\,\% & {\bf 98.0\,\%} &0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+            &                 & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$)   & 2.0\,\% & {\bf 98.0\,\%} &0\,\% & 0\,\% \\ 
+\vspace*{-2mm} & & & & & &  \\
+\hline
+\vspace*{-2mm} & & & & & &  \\
+{\bf (iv)} & {\bf secondary} & AIC                                                                                                         & 4.0\,\% & 0\,\% & {\bf 96.0\,\%} & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+            &      {\bf contact}  & LRT ($\chi^2_2$)                                                                                       & 2.0\,\% & 0\,\% & {\bf 98.0\,\%} & 0\,\% \\ 
+\vspace*{-3mm} & & & & & &  \\
+            &                          & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)                                    & 2.0\,\% & 0\,\% & {\bf 98.0\,\%} & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+            &                          & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$)  & 3.5\,\% & 0\,\% & {\bf 96.5\,\%} & 0\,\%  \\ 
+\vspace*{-2mm} & & & & & &  \\
+\hline
+\vspace*{-2mm} & & & & & &  \\
+{\bf (v)} & {\bf isolation} & AIC                                                                                                          & 0\,\% &2.0\,\% & 2.0\,\% & {\bf 96.0\,\%} \\
+\vspace*{-3mm} & & & & & &  \\
+            &                       & LRT ($\chi^2_2$)                                                                                       & 0\,\% &0\,\% & 0.5\,\% & {\bf 99.5\,\%} \\
+\vspace*{-3mm} & & & & & &  \\
+            &                       & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)                                    & 0\,\% &0\,\% & 0.5\,\% & {\bf 99.5\,\%} \\
+\vspace*{-3mm} & & & & & &  \\
+            &                       & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$)  & 0\,\% &1.0\,\% & 0.5\,\% & {\bf 98.5\,\%} \\
+ & & & & & &  \\
+ \hline
+\end{tabular}}
+\end{center}
+\caption*{Results of the different model selection procedures for 200 data sets simulated under each of scenarios~(i) to~(v). The four models shown in Figure~\ref{models} were fitted to each simulated data set. For each scenario, the percentages shown are the proportions of data sets for which each of the four models was selected as the best-fitting model; the proportion of data sets for which the correct model was selected is shown in bold. For each simulated data set, model selection was performed using the methods described in Subsection~\ref{subsection: model comparison}. The method `AIC' consists of selecting the model with the best AIC score. The method `LRT' consists of a sequence of Likelihood Ratio Tests at an overall significance level of 5\%, using the distribution shown in parentheses as the null distribution. 
+%or: using the null distribution shown in parentheses instead of the precise null distribution as the latter is not easy to obtain.
+}
+\end{table}
+
+Whilst the use of $\chi^2_2$ or $\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$ instead of the precise asymptotic null distribution in our sequence of LR tests is known to be conservative, the results in Table~\ref{modelresults} suggest that the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ also appears to be conservative: using the latter distribution instead of the correct null distribution, and an overall significance level of 5\%, the isolation model was falsely rejected (resulting in a type~1 error) for only 1.5\% of data sets simulated from the isolation model (scenario~(v)); similarly, for data simulated from the IIM model (scenario~(iii)) 
+{\color{red}
+or the model of secondary contact (scenario~(iv)), a type~1 error was made (falsely rejecting the true model in favour of the GIM model) in only 2\% or 3.5\% of cases, respectively
+}
+%similarly, for data simulated from the IIM model (scenario~(iii)), a type~1 error was made (falsely rejecting the IIM model in favour of the GIM model) in only 2\% of cases; and for data simulated from the model of secondary contact (scenario~(iv)), a type~1 error was made (falsely rejecting the model of secondary contact in favour of the GIM model) in only 3.5\% of cases 
+-- less than the 5\% type~1 error rate that would be expected if we were able to use the precise null distribution of the test statistic. 
+Compared to the other two distributions considered, the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ 
+%has the advantage that it 
+gives somewhat higher power to detect the small level of gene flow in the intermediate stage of the model in scenario~(ii).
+
+
+\section{Discussion}
+
+In this paper we have presented a Maximum-Likelihood method to estimate the parameters of a `generalised isolation-with-migration model' from data consisting of the numbers of nucleotide differences between one pair of DNA sequences at each of a large number of independent loci. Our method is computationally very fast and can also be used to easily compare the fit of the four models depicted in Figure~\ref{models}, thus making it possible to distinguish between these different evolutionary scenarios. In \citet{Janko2018} we applied 
+%a slightly simplified version of our method with symmetric migration rates 
+our method (slightly simplified, with symmetric migration rates) to data from different species of {\em Cobitis} 
+(spined loaches) 
+to try to reconstruct the evolutionary history of these species. 
+%The results enabled us to infer extensive historical gene flow between {\em C. elongatoides} and the common ancestor of {\em C. taenia}, {\em C. tanaitica} and {\em C. pontica}, followed by the present isolation of all these species.
+The results suggested that extensive historical gene flow occurred between {\em C.~elongatoides} and the common ancestor of {\em C.~taenia}, {\em C.~tanaitica} and {\em C.~pontica}, and that this was followed by reproductive isolation of all these species.
+%or: and that all these species are reproductively isolated at present. 
+%However, the mathematical derivations underlying our method had not yet been published, and a simulation study to evaluate the performance of our method had not been done yet. 
+In the previous sections we have presented the mathematical derivations underlying our method, together with a simulation study to evaluate the performance of our method under a number of different evolutionary scenarios 
+%with increasing, decreasing or no gene flow.  
+with decreasing or increasing gene flow, or in the absence of gene flow.
+
+\begin{table}[!b]
+\caption{\bf \\Model selection for simulated data: Results}
+\label{modelresults: additional}
+\vspace*{-3mm}
+\begin{center}
+\hspace*{-1.65cm}
+{\small \begin{tabular}{|c|c|l|rrrr|} \hline 
+\vspace*{-2mm} & & & & & &  \\
+ &  &  & \multicolumn{4}{c|}{\bf best-fitting model} \\  
+\vspace*{-2mm} & & & & & &  \\
+\cline{4-7} 
+\vspace*{-2mm} & & & & & &  \\
+{\bf simulation} & {\bf true}    & \multicolumn{1}{c|}{\bf method} & \multicolumn{1}{c}{\bf ~~GIM~~} & \multicolumn{1}{c}{\bf ~~IIM~~} & \multicolumn{1}{c}{\bf secondary} & \multicolumn{1}{c|}{\bf isolation} \\
+{\bf scenario}    & {\bf model} &                                             &                                        &                                      & \multicolumn{1}{c}{\bf contact}     &                                               \\ 
+\vspace*{-2mm} & & & & & &  \\
+\hline 
+\vspace*{-2mm} & & & & & &  \\
+ {\bf (vi)}  & {\bf IIM} & AIC                                                                                                              & 0\,\% & {\bf 92.0\,\%} & 2.5\,\% & 5.5\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+    {\em as in scenario (ii)}  &                & LRT ($\chi^2_2$)                                                                                      & 0\,\% & {\bf 79.0\,\%} & 2.0\,\% & 19.0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+    {\em but with}  &                & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)            & 0\,\% & {\bf 83.5\,\%} & 2.0\,\% & 14.5\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+    ${M'_1}^{*}={M'_2}^{*}=0$        &                & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$)                 & 0\,\% & {\bf 88.0\,\%} & 2.5\,\% & 9.5\,\% \\
+\vspace*{-2mm} & & & & & &  \\
+\hline
+\vspace*{-2mm} & & & & & &  \\
+{\bf (vii)} & {\bf GIM} & AIC                                                                                                                                       & {\bf 29.0\,\%} & 0\,\% & 71.0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+   {\em as in scenario (ii)}         &                & LRT ($\chi^2_2$)                                                                                                                    & {\bf 15.5\,\%} & 0\,\% & 84.5\,\% & 0\,\% \\ 
+\vspace*{-3mm} & & & & & &  \\
+  {\em but with}      &                & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)           & {\bf 21.0\,\%} & 0\,\% & 79.0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+    {\em ${M_1}^{\!*}=0.08$ and ${M_2}^{\!*}=0.16$}          &                & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$)                                                    & {\bf 28.0\,\%} & 0\,\% & 72.0\,\% & 0\,\%  \\ 
+\vspace*{-2mm} & & & & & &  \\
+\hline
+\vspace*{-2mm} & & & & & &  \\
+ {\bf (viii)} & {\bf GIM} & AIC                                                                                                          & {\bf 68.0\,\%} & 0\,\% & 32.0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+   {\em as in scenario (ii)}   &                 & LRT ($\chi^2_2$)                                                                                        & {\bf 55.0\,\%} & 0\,\% & 45.0\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+     {\em but with}           &                 & LRT ($\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$)                                                 & {\bf 60.5\,\%} & 0\,\% & 39.5\,\% & 0\,\% \\
+\vspace*{-3mm} & & & & & &  \\
+    $V=8$         &                 & LRT ($\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$)                        & {\bf 65.5\,\%} & 0\,\% & 34.5\,\% & 0\,\% \\ 
+ & & & & & &  \\
+\hline
+\end{tabular}}
+\end{center}
+\caption*{Results of the different model selection procedures for 200 data sets simulated under each of scenarios~(vi) to~(viii). The four models shown in Figure~\ref{models} were fitted to each simulated data set. For each scenario, the percentages shown are the proportions of data sets for which each of the four models was selected as the best-fitting model; the proportion of data sets for which the correct model was selected is shown in bold. For each simulated data set, model selection was performed using the methods described in Subsection~\ref{subsection: model comparison}. The method `AIC' consists of selecting the model with the best AIC score. The method `LRT' consists of a sequence of Likelihood Ratio Tests at an overall significance level of 5\%, using the distribution shown in parentheses as the null distribution. 
+%or: using the null distribution shown in parentheses instead of the precise null distribution as the latter is not easy to obtain.
+}
+\end{table}
+For the vast majority of data sets simulated from scenarios~(i), (iii), (iv) and~(v) in Section~\ref{Section: simulation results}, our method correctly identified the `true' model. 
+However, for data simulated from a scenario of increasing gene flow (scenario~(ii)), there was little power 
+% only low power
+to detect the very small amount of gene flow that had occurred in the intermediate stage of the model.
+%\\or: However, there was only limited power to detect a very small amount of gene flow in the intermediate stage of the model when this was followed by an increase of the level of gene flow (scenario~(ii)). 
+%\\or: However, there was only limited power to detect a very small amount of historical gene flow when this was followed by an increase of the level of gene flow (scenario~(ii)). \\
+To further investigate whether the lack of power in this particular scenario is due to the subsequent increase in the level of gene flow, or whether there is more generally a lack of power to detect a small amount of gene flow that occurred a long time ago, we simulated 200 data sets from a model with the same parameters as in scenario~(ii) except for the contemporary migration rates, which were set to 0:  
+\begin{itemize}
+\item scenario (vi): 
+$\theta_0=3,\,\, \theta_1=2,\,\, \theta_2=4,\,\, \theta'_1=3,\,\, \theta'_2=6,\,\,T_1=4,\,\, V=4$, with migration parameters ${M_1}^{\!*}=0.04$ and ${M_2}^{\!*}=0.08$ decreasing to ${M'_1}^{*}={M'_2}^{*}=0$;
+\end{itemize}
+ the number of loci in each simulated data set, and the relative mutation rates of the different loci, were also as in Section~\ref{Section: simulation results}. We fitted the four models shown in Figure~\ref{models} to each of the simulated data sets and applied the model selection procedures described in Subsection~\ref{subsection: model comparison}. 
+%We found that in this case 
+%% in this new scenario
+%the power to detect 
+%% the very small amount of gene flow that had occurred in the intermediate stage of the model
+%the small amount of historical gene flow
+%% the small amount of ancient gene flow
+%was very high: 
+The results in Table~\ref{modelresults: additional} show that, in contrast with scenario~(ii), the power to detect the small amount of historical gene flow in this new scenario~(vi) was high:
+our method returned the correct IIM model for 92\% of the simulated data sets when the best-fitting model was selected by means of AIC scores, and for 83.5\% or 88\% of the simulated data sets when a sequence of Likelihood Ratio tests was used with, respectively, the mixtures $\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$  or $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the precise null distribution.
+% for detailed results see Appendix~B, Table~\ref{}. 
+Thus it appears that the lack of power to detect 
+%the very small amount of gene flow in the intermediate stage of the model 
+the small amount of historical gene flow
+in scenario~(ii) was specifically due to the subsequent increase in the level of gene flow: the larger level of contemporary
+%more recent 
+gene flow appears to mask the signal from the small amount of earlier gene flow.
+% essentially masks the small amount of earlier gene flow. 
+%In order to assess to what extent the power of our method in this type of scenario might improve if the level of historical gene flow was larger, or if this low level of gene flow lasted for a longer period of time, we also simulated 200 data sets from each of the following two additional scenarios: 
+%\begin{itemize}
+%\item scenario~(ii) but with double the rate of historical gene flow:\\ $\theta_0=3,\,\, \theta_1=2,\,\, \theta_2=4,\,\, \theta'_1=3,\,\, \theta'_2=6,\,\, T_1=4,\,\, V=4$, with ${M_1}^{\!*}=0.08$ and ${M_2}^{\!*}=0.16$ increasing to
+%${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$;
+%\item scenario~(ii) but with the intermediate time period lasting twice as long:\\ $\theta_0=3,\,\, \theta_1=2,\,\, \theta_2=4,\,\, \theta'_1=3,\,\, \theta'_2=6,\,\, T_1=4,\,\, V=8$, with ${M_1}^{\!*}=0.04$ and ${M_2}^{\!*}=0.08$ increasing to ${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$.
+%\end{itemize}
+In order to assess to what extent the power of our method in this type of scenario might improve if the level of historical gene flow was larger, or if this low level of historical gene flow lasted for a longer period of time, we also simulated 200 data sets from each of % the following two additional scenarios: 
+the following two modifications of scenario~(ii):
+\begin{itemize}
+\item doubling the amount of historical gene flow: \\
+scenario (vii): 
+%as in scenario~(ii) but with double the amount of historical gene flow:\\
+$\theta_0=3,\,\, \theta_1=2,\,\, \theta_2=4,\,\, \theta'_1=3,\,\, \theta'_2=6,\,\, T_1=4,\,\, V=4$, with ${M_1}^{\!*}=0.08$ and ${M_2}^{\!*}=0.16$ increasing to
+${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$;
+% (i.e. as in scenario~(ii) but with double the rate of historical gene flow); 
+\item doubling the duration of the intermediate time period:\\
+scenario (viii): 
+%as in scenario~(ii) but with the intermediate time period lasting twice as long:
+$\theta_0=3,\,\, \theta_1=2,\,\, \theta_2=4,\,\, \theta'_1=3,\,\, \theta'_2=6,\,\, T_1=4,\,\, V=8$, with ${M_1}^{\!*}=0.04$ and ${M_2}^{\!*}=0.08$ increasing to ${M'_1}^{*}=0.2$ and ${M'_2}^{*}=0.4$.
+% (i.e. as in scenario~(ii) but with the intermediate time period lasting twice as long). 
+\end{itemize}
+We found that while doubling the rate of historical gene flow only led to a modest improvement in power, doubling the duration of the intermediate time period resulted in considerably higher power to detect this historical gene flow (see Table~\ref{modelresults: additional}).
+
+For each of the Likelihood Ratio tests in the model selection procedure set out in Subsection~\ref{subsection: model comparison}, the asymptotic null distribution of the LRT statistic is a mixture of $\chi^2_{\nu}$ distributions ($\nu =0,1,2$), but the precise coefficients of $\chi^2_0$ and $\chi^2_2$ in the mixture are not easy to compute; the coefficient of $\chi^2_1$ in the mixture is $\frac{1}{2}$. Whilst the use of $\chi^2_2$ or $\frac{1}{2} \chi^2_1 +\frac{1}{2} \chi^2_2$ instead of the precise asymptotic null distribution is obviously conservative, the simulation results in Section~\ref{Section: simulation results} suggest that the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ also appears to be conservative, and results in somewhat higher power compared to the other two distributions. 
+% which is an advantage particularly in a scenario of increasing gene flow.  
+{\color{red} QQ-plots comparing the quantiles of the null distribution of the LRT statistic $\Lambda$ obtained for simulated data
+with the theoretical quantiles of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$\,, for each of the four Likelihood Ratio tests in our model selection procedure,
+%further indicate
+confirm 
+that the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the correct null distribution in these tests is indeed conservative - these plots are shown in the Appendix.} 
+%To further investigate whether the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ 
+%%instead of the correct null distribution 
+%in this context is indeed conservative, QQ-plots were constructed (see Figure~\ref{QQplots}) comparing 
+%%the quantiles of the LRT statistic obtained for data sets simulated under the null hypothesis 
+%the quantiles of the null distribution of the LRT statistic $\Lambda$ obtained for simulated data
+%with the theoretical quantiles of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$\,, for each of the four Likelihood Ratio tests in our model selection procedure:
+%% (see Subsection~\ref{subsection: model comparison}): 
+%(a) the isolation model versus the IIM model; (b) the isolation model versus the model of secondary contact; (c) the IIM model versus the GIM model; and (d) the model of secondary contact versus the GIM model. The QQ-plots were based on the 200 data sets %that were simulated under the null hypothesis in each case: the isolation model (scenario~(v)) for plots~(a) and~(b), the IIM model (scenario~(iii)) for plot~(c), and the model of secondary contact (scenario~(iv)) for plot~(d); 
+%full details of the simulations and parameter values used were given in Section~\ref{Section: simulation results}.
+% For the tests in (a), (b) and (c), the QQ-plots confirm that the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the correct null distribution is conservative, as in each of these plots all points lie below the diagonal red line, %i.e. the quantiles of the (simulated) null distribution of the LRT statistic $\Lambda$ are smaller than the corresponding quantiles of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$. 
+%%For the test in (d), the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ also appears to be conservative except perhaps when a very small significance level is used, as the two points corresponding to the 99.25th and 99.75th %quantiles lie slightly above the diagonal red line. These two `too large' values may be due to chance, however, and more extensive simulations would be needed to determine whether or not the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} %\chi^2_2$ instead of the precise null distribution for the LRT in (d) is still conservative in the extreme upper tail of the distribution.
+%%or: is still conservative for very small significance levels ($< 1\%$).\\
+%For the QQ-plot in (d), 
+%%although the two points corresponding to the 99.25th and 99.75th quantiles lie somewhat above the diagonal red line, 
+%although the two most extreme points in the top right corner lie somewhat above the diagonal red line,
+%additional simulations show that this is merely due to chance (see Figure~\ref{additional QQplot} in the Appendix) and that the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the precise null distribution for the LRT in (d) %is also conservative.
+%%Add additional plot (500 simulated data sets)!
+Nevertheless, further work is needed to establish whether the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ is always conservative when testing whether two migration rates are both 0 in a GIM model or in one of its variants, whatever the true parameter values.
+% whatever the true parameter values might be.
+Further work to more easily compute the precise asymptotic null distribution of the LRT statistic would also be useful, as it would enhance the power of the model selection procedure, but this is beyond the scope of the present study.
+
+The work presented in this paper assumes the infinite sites model of mutation. While it would be straightforward to adapt our method to the Jukes-Cantor model of mutation \citep{Jukes1969} by combining our result~(\ref{eq:likelihood_single_2}) for the GIM model with equation~(3) of \citet{Lohse2011}, 
+such implementation is left for future work. 
+%we have not yet implemented this.
+Extensions to more complex mutation models should also be possible but would require more effort.
+% ? omit the above paragraph?
+
+{\color{red}
+Another possible extension might be to make our method applicable to data sets 
+%consisting of the numbers of segregating sites in a sample of more than two sequences, at each of a large number of independent loci.
+where each observation consists of the number of segregating sites in a sample of more than two sequences. In Section~2.1, we derived the distribution of the time since the most recent common ancestor of two lineages under the GIM model using the distribution of the corresponding time under the two-deme structured coalescent. It is thus conceivable that the distribution of the total branch length for $n$ lineages could be derived using the distribution of that length under the two-deme structured coalescent  \citep[as given by][]{Kumagai2015}.
+% not quite possible this way?
+ It might then be feasible to obtain the distribution of the number of segregating sites in a sample of $n$ sequences -- or the likelihood of one observation -- by an argument similar to the one used  in Section~2.2 to derive the distribution of the number of pairwise differences.
+% shorten this and combine this in a paragraph also mentioning Andersen et al. + suggestion by reviewer of averaging over all possible pairs in a sample and taking composite likelihood.
+}
+%For mathematical simplicity and computational speed, our method uses data consisting of the number of nucleotide differences between one pair of DNA sequences at each of a large number of loci. In practice, the easiest way to accommodate larger samples of sequences at each locus would be ... [composite likelihood method - see reviewer + Lohse?]. Alternatively, it should be possible to extend our method to samples of more than two sequences per locus, either by using an approach similar to that of [ref. Andersen et al.] for full sequence alignments, or ... [Kumagai reference] 
+
+
+Our ML method 
+%also 
+assumes that there is no recombination within loci and free recombination between loci. These assumptions, although commonly made in the literature, may often be violated for real data sets. In the `Discussion' Section of \citet{Costa2017} we examined in detail
+% discussed in depth 
+the effects of such potential violations of our assumptions on the accuracy of ML estimates obtained for the IIM model; parameter estimates obtained for the GIM model can be expected to be affected in a similar way. In particular, while 
+%substantial recombination within loci would lead to biased estimates, 
+non-negligible recombination within loci may lead to biased estimates,
+linkage between loci should not cause bias but -- unless properly accounted for -- would lead to underestimation of the uncertainty surrounding the estimates obtained (see also \citealp{Baird2015, Lohse2016}).
+We refer
+% the reader
+ to \citet{Costa2017} for an illustration of how linkage disequilibrium, and model misspecification more generally, can be accounted for in practice.
+
+{\color{red} 
+%Having derived an explicit expression for the probability distribution of the number of nucleotide differences between two DNA sequences under the GIM model, maximising the resulting likelihood requires very little computing time, and it was therefore natural to use ML methods
+%% a ML framework
+%for parameter estimation and model selection rather than a Bayesian framework.
+Having derived an explicit expression for the likelihood of a data set consisting of the numbers of nucleotide differences between one pair of DNA sequences at each of a large number of independent loci, it was natural to use ML methods for parameter estimation and model selection rather than a Bayesian approach, as maximising this likelihood is straightforward and requires very little computing time. 
+If desired, it should nevertheless be possible to use our results for the likelihood as a building block to develop an analogous Bayesian method. 
+%[although such a method would require an additional level of computation and hence would not be as fast.]
+\citet{Yang2018} pointed out some fundamental problems arising in Bayesian model selection when all models considered are misspecified, which is typically the case in evolutionary genetics. An additional advantage of using a ML framework may therefore be that the effects of model misspecification in this context are somewhat better understood and less difficult to account for.
+% add references?
+} 
+
+\section*{Acknowledgements}
+
+We thank Karel Janko for some valuable discussions which motivated the work presented in this paper.
+This work was supported by the UK Engineering and Physical Sciences Research Council [grant number EP/K502959/1]. 
+
+\section*{Declarations of interest} 
+None.
+
+\newpage
+
+%\section*{Appendix~A}
+
+%formulae for IIM / secondary contact / isolation model?
+
+%\newpage
+
+
+%\section*{Appendix~B}
+\section*{Appendix}
+
+{\color{red}
+For each of the Likelihood Ratio tests in the model selection procedure set out in Subsection~\ref{subsection: model comparison}, the asymptotic null distribution of the LRT statistic is a mixture of $\chi^2_{\nu}$ distributions ($\nu =0,1,2$), but the precise coefficients of $\chi^2_0$ and $\chi^2_2$ in the mixture are not easy to compute; the coefficient of $\chi^2_1$ in the mixture is $\frac{1}{2}$. The simulation results in Section~\ref{Section: simulation results} suggest that the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the correct null distribution appears to be conservative. In this Appendix we further examine whether that is indeed the case.
+To this end, QQ-plots were constructed (see Figure~\ref{QQplots}) comparing 
+%the quantiles of the LRT statistic obtained for data sets simulated under the null hypothesis 
+the quantiles of the null distribution of the LRT statistic $\Lambda$ obtained for simulated data
+with the theoretical quantiles of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$\,, for each of the four Likelihood Ratio tests in our model selection procedure:
+\begin{enumerate}
+\item[(a)] the isolation model versus the IIM model; 
+\item[(b)] the isolation model versus the model of secondary contact; 
+\item[(c)] the IIM model versus the GIM model; 
+\item[(d)] the model of secondary contact versus the GIM model. 
+\end{enumerate}
+The QQ-plots are based on the 200 data sets that were simulated in Section~\ref{Section: simulation results} under the null hypothesis in each case: the isolation model (scenario~(v)) for plots~(a) and~(b), the IIM model (scenario~(iii)) for plot~(c), and the model of secondary contact (scenario~(iv)) for plot~(d);
+full details of the simulations, and the parameter values used, are given in Section~\ref{Section: simulation results}.
+\begin{figure}[t]
+\textbf{\hspace*{-1cm} (a) \hspace*{8cm} (b)}\par\smallskip
+\vspace*{-0.5cm}
+\makebox[\textwidth][c]{
+\includegraphics[width=.5\textwidth]{QQplot_iso_vs_IIM_chisqbarapprox_v2.pdf}\quad
+\hspace*{1cm}
+\includegraphics[width=.5\textwidth]{QQplot_iso_vs_intro_chisqbarapprox_v2.pdf}
+}
+\par\smallskip
+\textbf{\hspace*{-1cm} (c) \hspace*{8cm} (d)}\par\smallskip
+\vspace*{-0.5cm}
+\makebox[\textwidth][c]{
+\includegraphics[width=.5\textwidth]{QQplot_IIM_vs_GIM_chisqbarapprox_v2.pdf}\quad
+\hspace*{1cm}
+\includegraphics[width=.5\textwidth]{QQplot_intro_vs_GIM_chisqbarapprox_v2.pdf}
+}
+\vspace*{-0.5cm}
+\caption{QQ-plots of the null distribution of the LRT statistic $\Lambda$ (obtained for simulated data) against the mixture $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$. Plots~(a) and~(b) are, respectively, for the LRT of the isolation model ($H_0$) against the IIM model ($H_1$), and the LRT of the isolation model ($H_0$) against the model of secondary contact ($H_1$), for 200 data sets simulated from an isolation model (scenario~(v) in Section~\ref{Section: simulation results}).
+%or: for 200 data sets simulated from an isolation model with parameter values as in scenario~(v) in Section~\ref{Section: simulation results}.
+Plot~(c) is for the LRT of the IIM model ($H_0$) against the GIM model ($H_1$), for 200 data sets simulated from an IIM model (scenario~(iii) in Section~\ref{Section: simulation results}). Plot~(d) is for the LRT of the model of secondary contact ($H_0$) against the GIM model ($H_1$), for 200 data sets simulated from a model of secondary contact (scenario~(iv) in Section~\ref{Section: simulation results}).
+%Each simulated data set consisted of the number of nucleotide differences between one pair of DNA sequences at each of 40,000 different loci (two sequences from population 1 at 10,000 loci; two sequences from population 2 at 10,000 loci; one sequence from each population at 20,000 loci). 
+The line $y=x$ is also shown (in red) for ease of comparison.
+ }
+\label{QQplots}
+\end{figure}
+
+For the tests in (a), (b) and (c), the QQ-plots in Figure~\ref{QQplots} confirm that the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the correct null distribution is conservative, as in each of these plots all points lie below the diagonal red line, i.e. the quantiles of the (simulated) null distribution of the LRT statistic $\Lambda$ are smaller than the corresponding quantiles of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$. 
+%For the test in (d), the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ also appears to be conservative except perhaps when a very small significance level is used, as the two points corresponding to the 99.25th and 99.75th quantiles lie slightly above the diagonal red line. These two `too large' values may be due to chance, however, and more extensive simulations would be needed to determine whether or not the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the precise null distribution for the LRT in (d) is still conservative in the extreme upper tail of the distribution.
+%or: is still conservative for very small significance levels ($< 1\%$).\\
+In the QQ-plot in (d),
+%as the two points corresponding to the 99.25th and 99.75th quantiles lie somewhat above the diagonal red line, 
+the two most extreme points in the top right corner lie somewhat above the diagonal red line, and therefore additional simulations were carried out to assess whether this indicates non-conservativeness or whether this is merely due to chance:}
+a further 300 data sets were simulated from scenario~(iv) (the model of secondary contact), in addition to the 200 data sets already simulated from this scenario in Section~\ref{Section: simulation results}. We fitted both the model of secondary contact and the full GIM model to each simulated data set and computed the value of the LRT statistic $\Lambda$ for the test of the model of secondary contact ($H_0$) against the GIM model ($H_1$). Figure~\ref{additional QQplot} shows the QQ-plot of the distribution of $\Lambda$ against the mixture $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$, where the quantiles of $\Lambda$ were computed using all 500 simulated observations of the LRT statistic.
+%or: all 500 simulated data sets
+This plot indicates that, for the Likelihood Ratio test in {\color{red} (d)}, the use of $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$ instead of the precise null distribution of $\Lambda$ is {\color{red} also} conservative.
+
+\vspace*{0.5cm}
+
+\begin{figure}[t]
+\makebox[\textwidth][c]{
+\includegraphics[width=.5\textwidth]{QQplot_intro_vs_GIM_chisqbarapprox_v2_extended_data}
+}
+\vspace*{-0.5cm}
+\caption{QQ-plot of the null distribution of the LRT statistic $\Lambda$ (obtained for simulated data) against the mixture $\frac{1}{4} \chi^2_0 +\frac{1}{2} \chi^2_1 +\frac{1}{4} \chi^2_2$\,, for the LRT of the model of secondary contact ($H_0$) against the GIM model ($H_1$). The quantiles of $\Lambda$ were based on 500 data sets simulated from a model of secondary contact (scenario~(iv) in Section~\ref{Section: simulation results}).
+%Each simulated data set consisted of the number of nucleotide differences between one pair of DNA sequences at each of 40,000 different loci (two sequences from population 1 at 10,000 loci; two sequences from population 2 at 10,000 loci; one sequence from each population at 20,000 loci). 
+The line $y=x$ is also shown (in red) for ease of comparison.
+ }
+\label{additional QQplot}
+\end{figure}
+
+
+\clearpage
+\bibliographystyle{Chicago}
+\bibliography{GIMpaper}
+\end{document}
+
